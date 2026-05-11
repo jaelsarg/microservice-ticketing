@@ -14,7 +14,9 @@ import {
     PublishDomainEventsMongoDbUnitOfWorkInterceptor,
 } from '@/Infrastructure/Persistence/MongoDb/mod.ts';
 import {
+    MongoDbMovieRepository,
     MongoDbSuggestionRepository,
+    MovieDocumentMapper,
     SuggestionDocumentMapper,
 } from '@/Infrastructure/Persistence/MongoDb/Repositories/mod.ts';
 import {
@@ -93,6 +95,9 @@ export class Persistence implements Module {
                     (await serviceProvider.getService<InMemoryDomainEventPublisher>(
                         'InMemoryDomainEventPublisher',
                     )).getOrThrow();
+                const movieRepository = (await serviceProvider.getService<MongoDbMovieRepository>(
+                    MongoDbMovieRepository.name
+                )).getOrThrow();
                 const suggestionRepository = (await serviceProvider.getService<
                     MongoDbSuggestionRepository
                 >(
@@ -101,6 +106,7 @@ export class Persistence implements Module {
 
                 const unitOfWork = new MongoDbUnitOfWork(mongoClient.session);
                 unitOfWork.registerRepository(suggestionRepository);
+                unitOfWork.registerRepository(movieRepository);
 
                 const interceptors = [
                     new PublishDomainEventsMongoDbUnitOfWorkInterceptor(
@@ -117,6 +123,16 @@ export class Persistence implements Module {
     }
 
     private registerRepositories(serviceCollection: ServiceCollection): void {
+        serviceCollection.addScoped(
+            MongoDbMovieRepository.name,
+            async (serviceProvider: ServiceProvider) => {
+                const mongoClient = (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
+                const mapper = new MovieDocumentMapper();
+
+                return new MongoDbMovieRepository(mongoClient, mapper);
+            }
+        );
+
         serviceCollection.addScoped(
             MongoDbSuggestionRepository.name,
             async (serviceProvider: ServiceProvider) => {
