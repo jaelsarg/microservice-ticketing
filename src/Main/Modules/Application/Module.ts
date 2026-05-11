@@ -24,6 +24,7 @@ import { MongoDbUnitOfWork } from '@/Infrastructure/Persistence/MongoDb/Shared/m
 import { Config, ConsoleLogger } from '@/Infrastructure/Shared/mod.ts';
 import { Module } from '@/Main/Modules/Shared/mod.ts';
 import { OnlinePaymentService } from '@/Infrastructure/Payment/mod.ts';
+import { SaveMovie, SaveMovieInput } from '@/Application/Ticketing/Movies/mod.ts';
 
 export class Application implements Module {
     add(serviceCollection: ServiceCollection, _config: Config): void {
@@ -38,6 +39,19 @@ export class Application implements Module {
     }
 
     private addUseCases(serviceCollection: ServiceCollection): void {
+        serviceCollection.addScoped(
+            SaveMovie.name,
+            async (serviceProvider: ServiceProvider) => {
+                const uow = (await serviceProvider.getService<MongoDbUnitOfWork>(MongoDbUnitOfWork.name)).getOrThrow();
+
+                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name)).getOrThrow();
+
+                const useCase: UseCase<SaveMovieInput, void> = new SaveMovie(uow, logger);
+
+                return useCase;
+            }
+        );
+
         serviceCollection.addScoped(
             CreateSuggestionUseCase.name,
             async (serviceProvider: ServiceProvider) => {
