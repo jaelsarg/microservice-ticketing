@@ -24,6 +24,24 @@ servers:
                 virtualHost: /
 
 channels:
+    # Receive channels
+    Howestprime.movies.movie.movieregistered:
+        address: howestprime.movies.movie.movieregistered
+        title: Movie registered
+        messages:
+            MovieRegistered:
+                $ref: '#/components/messages/MovieRegistered'
+        bindings:
+            amqp:
+                is: routingKey
+                exchange:
+                    name: howestprime
+                    type: topic
+                    routingKey: howestprime.movies.movie.movieregistered
+
+    # Send channels
+
+    # Suggestions
     thirdparty.service.suggestions.sendcreatesuggestion:
         address: thirdparty.service.suggestions.sendcreatesuggestion
         title: Send create suggestion
@@ -53,6 +71,18 @@ channels:
                     routingKey: howestprime.ticketing.suggestions.created
 
 operations:
+    # Receive operations
+    WhenMovieRegisteredSaveMovie:
+        action: receive
+        channel:
+            $ref: '#/channels/Howestprime.movies.movie.movieregistered'
+        description: Handles a MovieRegistered event from the Howestprime Movies service.
+        messages:
+            - $ref: '#/channels/Howestprime.movies.movie.movieregistered/messages/MovieRegistered'
+
+    # Send operations
+
+    # Suggestions
     WhenSuggestionSendCreateSuggestion:
         action: receive
         channel:
@@ -75,6 +105,12 @@ operations:
 
 components:
     messages:
+        MovieRegistered:
+            name: MovieRegistered
+            title: Movie registered
+            summary: Indicates a new movie has been registered
+            payload:
+                $ref: '#/components/schemas/MovieRegisteredPayload'
         SuggestionSendCreateSuggestion:
             name: SuggestionSendCreateSuggestion
             title: Suggestion create request
@@ -90,6 +126,38 @@ components:
                 $ref: '#/components/schemas/SuggestionCreatedPayload'
 
     schemas:
+        MovieRegisteredPayload:
+            type: object
+            required:
+                - movieId
+                - title
+                - duration
+                - genres
+                - ageRating
+                - posterUrl
+            properties:
+                movieId:
+                    type: string
+                    format: uuid
+                title:
+                    type: string
+                releaseYear:
+                    type: integer
+                duration:
+                    type: integer
+                genres:
+                    type: array
+                    items:
+                        type: string
+                actors:
+                    type: array
+                    items:
+                        type: string
+                ageRating:
+                    type: integer
+                posterUrl:
+                    type: string
+
         SuggestionSendCreateSuggestionPayload:
             type: object
             required:
