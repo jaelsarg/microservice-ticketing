@@ -15,7 +15,7 @@ export class MovieDuration extends ValueObject {
         let duration;
 
         if (value > 100) {
-            duration = new MovieDuration(value + MovieDuration.INTERMISSION_DURATION);
+            duration = new MovieDuration(value + this.INTERMISSION_DURATION);
         } else {
             duration = new MovieDuration(value);
         }
