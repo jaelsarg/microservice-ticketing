@@ -28,11 +28,9 @@ export class InvalidGenreException extends DomainException {
 }
 
 export class InvalidGenreLengthException extends DomainException {
-    constructor(genres: string[]) {
+    constructor() {
         super(
-            `Movie genres "${
-                genres.map((g) => g).join(', ')
-            }" is invalid. Movie must have at least one genre.`,
+            `Movie must have at least one genre.`,
         );
     }
 }
