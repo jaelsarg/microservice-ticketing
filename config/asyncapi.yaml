@@ -25,7 +25,7 @@ servers:
 
 channels:
     # Receive channels
-    Howestprime.movies.movie.movieregistered:
+    Howestprime.Movies.Movie.MovieRegistered:
         address: howestprime.movies.movie.movieregistered
         title: Movie registered
         messages:
@@ -75,7 +75,7 @@ operations:
     WhenMovieRegisteredSaveMovie:
         action: receive
         channel:
-            $ref: '#/channels/Howestprime.movies.movie.movieregistered'
+            $ref: '#/channels/Howestprime.Movies.Movie.MovieRegistered'
         description: Handles a MovieRegistered event from the Howestprime Movies service.
         messages:
             - $ref: '#/channels/Howestprime.movies.movie.movieregistered/messages/MovieRegistered'
