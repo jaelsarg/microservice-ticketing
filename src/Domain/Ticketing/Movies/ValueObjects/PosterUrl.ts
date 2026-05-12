@@ -20,8 +20,15 @@ export class PosterUrl extends ValueObject {
             throw new InvalidPosterUrlException(this._value);
         }
 
-        const url = new URL(this._value);
-        if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+        try {
+            const url = new URL(this._value);
+            if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+                throw new InvalidPosterUrlException(this._value);
+            }
+        } catch (error) {
+            if (error instanceof InvalidPosterUrlException) {
+                throw error;
+            }
             throw new InvalidPosterUrlException(this._value);
         }
     }
