@@ -70,7 +70,7 @@ export class Movie extends AggregateRoot<MovieId> {
         return movie;
     }
 
-    protected validate(): void {
+    private validate(): void {
         if (this._genres.length === 0) {
             throw new InvalidGenreLengthException(this._genres.map((g) => g.value));
         }
