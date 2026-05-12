@@ -1,8 +1,16 @@
 import { AggregateRoot, UUIDEntityId } from '@/Domain/Shared/mod.ts';
-import { AgeRating, Genre, InvalidGenreLengthException, InvalidMoneyException, Money, MoneyCalculationException, MovieDuration, MovieTitle, PosterUrl } from '@/Domain/Ticketing/Movies/mod.ts';
+import {
+    AgeRating,
+    Genre,
+    InvalidGenreLengthException,
+    Money,
+    MovieDuration,
+    MovieTitle,
+    PosterUrl,
+} from '@/Domain/Ticketing/Movies/mod.ts';
 
 export class MovieId extends UUIDEntityId {
-    private constructor(id?: string){
+    private constructor(id?: string) {
         super(id);
     }
 
@@ -28,7 +36,7 @@ export class Movie extends AggregateRoot<MovieId> {
         genres: Genre[],
         ageRating: AgeRating,
         posterUrl: PosterUrl,
-        price: Money
+        price: Money,
     ) {
         super(id);
         this._title = title;
@@ -45,7 +53,7 @@ export class Movie extends AggregateRoot<MovieId> {
         duration: MovieDuration,
         genres: Genre[],
         ageRating: AgeRating,
-        posterUrl: PosterUrl
+        posterUrl: PosterUrl,
     ): Movie {
         const movie = new Movie(
             id,
@@ -54,7 +62,7 @@ export class Movie extends AggregateRoot<MovieId> {
             genres,
             ageRating,
             posterUrl,
-            Money.create(this.BASE_PRICE * duration.value)
+            Money.create(this.BASE_PRICE * duration.value),
         );
 
         movie.validate();
@@ -64,15 +72,7 @@ export class Movie extends AggregateRoot<MovieId> {
 
     protected validate(): void {
         if (this._genres.length === 0) {
-            throw new InvalidGenreLengthException(this._genres.map(g => g.value));
-        }
-
-        if (this._price.value <= 0) {
-            throw new InvalidMoneyException(this._price.value);
-        }
-
-        if (this._price.value !== Movie.BASE_PRICE * this._duration.value) {
-            throw new MoneyCalculationException(this._price.value, Movie.BASE_PRICE * this._duration.value);
+            throw new InvalidGenreLengthException(this._genres.map((g) => g.value));
         }
     }
 

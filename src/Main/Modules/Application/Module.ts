@@ -42,14 +42,17 @@ export class Application implements Module {
         serviceCollection.addScoped(
             SaveMovie.name,
             async (serviceProvider: ServiceProvider) => {
-                const uow = (await serviceProvider.getService<MongoDbUnitOfWork>(MongoDbUnitOfWork.name)).getOrThrow();
+                const uow =
+                    (await serviceProvider.getService<MongoDbUnitOfWork>(MongoDbUnitOfWork.name))
+                        .getOrThrow();
 
-                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name)).getOrThrow();
+                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name))
+                    .getOrThrow();
 
                 const useCase: UseCase<SaveMovieInput, void> = new SaveMovie(uow, logger);
 
                 return useCase;
-            }
+            },
         );
 
         serviceCollection.addScoped(

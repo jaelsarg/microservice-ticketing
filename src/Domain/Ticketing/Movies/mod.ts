@@ -11,14 +11,13 @@ export { Money } from './ValueObjects/Money.ts';
 
 // Exceptions
 export {
-    InvalidMovieTitleException,
-    InvalidMovieDurationException,
+    InvalidAgeRatingException,
     InvalidGenreException,
     InvalidGenreLengthException,
-    InvalidAgeRatingException,
-    InvalidPosterUrlException,
     InvalidMoneyException,
-    MoneyCalculationException
+    InvalidMovieDurationException,
+    InvalidMovieTitleException,
+    InvalidPosterUrlException,
 } from './MovieExceptions.ts';
 
 // Repository Interface

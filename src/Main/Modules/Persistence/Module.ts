@@ -96,7 +96,7 @@ export class Persistence implements Module {
                         'InMemoryDomainEventPublisher',
                     )).getOrThrow();
                 const movieRepository = (await serviceProvider.getService<MongoDbMovieRepository>(
-                    MongoDbMovieRepository.name
+                    MongoDbMovieRepository.name,
                 )).getOrThrow();
                 const suggestionRepository = (await serviceProvider.getService<
                     MongoDbSuggestionRepository
@@ -126,11 +126,12 @@ export class Persistence implements Module {
         serviceCollection.addScoped(
             MongoDbMovieRepository.name,
             async (serviceProvider: ServiceProvider) => {
-                const mongoClient = (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
+                const mongoClient =
+                    (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
                 const mapper = new MovieDocumentMapper();
 
                 return new MongoDbMovieRepository(mongoClient, mapper);
-            }
+            },
         );
 
         serviceCollection.addScoped(

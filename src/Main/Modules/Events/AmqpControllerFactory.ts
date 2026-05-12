@@ -7,8 +7,8 @@ import {
 import type { UseCase } from '@/Application/Ports/mod.ts';
 import {
     CreateSuggestionController,
-    SaveMovieController,
     type CreateSuggestionRequest,
+    SaveMovieController,
 } from '@/Infrastructure/Messaging/LavinMQ/Controllers/mod.ts';
 
 import {

@@ -1,5 +1,16 @@
-import { AgeRating, Genre, Movie, MovieDuration, MovieId, MovieTitle, PosterUrl } from '@/Domain/Ticketing/Movies/mod.ts';
-import { DocumentMapper, serializeObjectToDocument } from '@/Infrastructure/Persistence/MongoDb/Shared/mod.ts';
+import {
+    AgeRating,
+    Genre,
+    Movie,
+    MovieDuration,
+    MovieId,
+    MovieTitle,
+    PosterUrl,
+} from '@/Domain/Ticketing/Movies/mod.ts';
+import {
+    DocumentMapper,
+    serializeObjectToDocument,
+} from '@/Infrastructure/Persistence/MongoDb/Shared/mod.ts';
 import { Document } from '@mongodb';
 
 export class MovieDocumentMapper implements DocumentMapper<Movie> {
@@ -9,15 +20,15 @@ export class MovieDocumentMapper implements DocumentMapper<Movie> {
             id: movie.id.toString(),
             title: movie.title.value,
             duration: movie.duration.value,
-            genres: movie.genres.map(genre => genre.value),
+            genres: movie.genres.map((genre) => genre.value),
             ageRating: movie.ageRating.value,
             posterUrl: movie.posterUrl.value,
-            price: movie.price.value
+            price: movie.price.value,
         });
 
         return document;
     }
-    
+
     // Reconstitute a Movie aggregate from a MongoDB document
     reconstitute(document: Document): Movie {
         const movie = this.reconstituteFromDocument(
@@ -26,11 +37,11 @@ export class MovieDocumentMapper implements DocumentMapper<Movie> {
             document.duration,
             document.genres,
             document.ageRating,
-            document.posterUrl
+            document.posterUrl,
         );
 
         return movie;
-    }    
+    }
 
     private reconstituteFromDocument(
         id: string,
@@ -38,14 +49,14 @@ export class MovieDocumentMapper implements DocumentMapper<Movie> {
         duration: number,
         genres: string[],
         ageRating: number,
-        posterUrl: string
+        posterUrl: string,
     ): Movie {
         const movie = Object.create(Movie.prototype);
 
         movie['_id'] = MovieId.create(id);
         movie['_title'] = MovieTitle.create(titel);
         movie['_duration'] = MovieDuration.create(duration);
-        movie['_genres'] = genres.map(genre => Genre.create(genre));
+        movie['_genres'] = genres.map((genre) => Genre.create(genre));
         movie['_ageRating'] = AgeRating.create(ageRating);
         movie['_posterUrl'] = PosterUrl.create(posterUrl);
 

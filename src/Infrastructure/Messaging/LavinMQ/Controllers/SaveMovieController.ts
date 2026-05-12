@@ -46,6 +46,6 @@ export class SaveMovieController implements AmqpController<SaveMovieRequest> {
             genres: request.genres,
             ageRating: request.ageRating,
             posterUrl: request.posterUrl,
-        }
+        };
     }
 }

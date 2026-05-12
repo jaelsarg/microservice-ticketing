@@ -19,7 +19,7 @@ export class MovieDuration extends ValueObject {
         } else {
             duration = new MovieDuration(value);
         }
-        
+
         duration.validate();
         return duration;
     }
