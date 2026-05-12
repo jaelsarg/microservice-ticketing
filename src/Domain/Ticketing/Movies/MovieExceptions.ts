@@ -4,7 +4,7 @@ import { DomainException } from '@/Domain/Shared/mod.ts';
 export class InvalidMovieTitleException extends DomainException {
     constructor(title: string) {
         super(
-            `Movie title "${title}" is invalid. Title must not be empty or contain only whitespace.`
+            `Movie title "${title}" is invalid. Title must not be empty or contain only whitespace.`,
         );
     }
 }
@@ -13,7 +13,7 @@ export class InvalidMovieTitleException extends DomainException {
 export class InvalidMovieDurationException extends DomainException {
     constructor(duration: number) {
         super(
-            `Movie duration "${duration}" is invalid. Duration must be a positive number.`
+            `Movie duration "${duration}" is invalid. Duration must be a positive number.`,
         );
     }
 }
@@ -22,7 +22,7 @@ export class InvalidMovieDurationException extends DomainException {
 export class InvalidGenreException extends DomainException {
     constructor(genre: string) {
         super(
-            `Movie genre "${genre}" is invalid. Genre must not be empty or contain only whitespace.`
+            `Movie genre "${genre}" is invalid. Genre must not be empty or contain only whitespace.`,
         );
     }
 }
@@ -30,8 +30,10 @@ export class InvalidGenreException extends DomainException {
 export class InvalidGenreLengthException extends DomainException {
     constructor(genres: string[]) {
         super(
-            `Movie genres "${genres.map(g => g).join(', ')}" is invalid. Movie must have at least one genre.`
-        )
+            `Movie genres "${
+                genres.map((g) => g).join(', ')
+            }" is invalid. Movie must have at least one genre.`,
+        );
     }
 }
 
@@ -39,7 +41,7 @@ export class InvalidGenreLengthException extends DomainException {
 export class InvalidAgeRatingException extends DomainException {
     constructor(ageRating: number) {
         super(
-            `Movie age rating "${ageRating}" is invalid. Age rating must be a positive integer.`
+            `Movie age rating "${ageRating}" is invalid. Age rating must be a positive integer.`,
         );
     }
 }
@@ -48,7 +50,7 @@ export class InvalidAgeRatingException extends DomainException {
 export class InvalidPosterUrlException extends DomainException {
     constructor(posterUrl: string) {
         super(
-            `Movie poster URL "${posterUrl}" is invalid. Poster URL must not be empty or contain only whitespace and needs to be a valid HTTP or HTTPS URL.`
+            `Movie poster URL "${posterUrl}" is invalid. Poster URL must not be empty or contain only whitespace and needs to be a valid HTTP or HTTPS URL.`,
         );
     }
 }
@@ -57,15 +59,7 @@ export class InvalidPosterUrlException extends DomainException {
 export class InvalidMoneyException extends DomainException {
     constructor(money: number) {
         super(
-            `Movie money "${money}" is invalid. Money must be a positive number.`
+            `Movie money "${money}" is invalid. Money must be a positive number.`,
         );
-    }
-}
-
-export class MoneyCalculationException extends DomainException {
-    constructor(provided: number, expected: number) {
-        super(
-            `Movie money ${provided} is invalid. Expected money based on duration is ${expected}.`
-        )
     }
 }
