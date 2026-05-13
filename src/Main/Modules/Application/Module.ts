@@ -25,6 +25,10 @@ import { Config, ConsoleLogger } from '@/Infrastructure/Shared/mod.ts';
 import { Module } from '@/Main/Modules/Shared/mod.ts';
 import { OnlinePaymentService } from '@/Infrastructure/Payment/mod.ts';
 import { SaveMovie, SaveMovieInput } from '@/Application/Ticketing/Movies/mod.ts';
+import {
+    CreateOrderFromBooking,
+    CreateOrderFromBookingInput,
+} from '@/Application/Ticketing/Orders/mod.ts';
 
 export class Application implements Module {
     add(serviceCollection: ServiceCollection, _config: Config): void {
@@ -55,6 +59,24 @@ export class Application implements Module {
             },
         );
 
+        serviceCollection.addScoped(
+            CreateOrderFromBooking.name,
+            async (serviceProvider: ServiceProvider) => {
+                const uow =
+                    (await serviceProvider.getService<MongoDbUnitOfWork>(MongoDbUnitOfWork.name))
+                        .getOrThrow();
+
+                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name))
+                    .getOrThrow();
+
+                const useCase: UseCase<CreateOrderFromBookingInput, string> =
+                    new CreateOrderFromBooking(uow, logger);
+
+                return useCase;
+            },
+        );
+
+        // Suggestions
         serviceCollection.addScoped(
             CreateSuggestionUseCase.name,
             async (serviceProvider: ServiceProvider) => {
