@@ -2,9 +2,7 @@ asyncapi: 3.1.0
 info:
     title: Howestprime.Ticketing
     version: 1.0.0
-    description: |
-        This AsyncAPI specification describes the message broker configuration
-        for suggestion create request/response flows in the Howestprime.Ticketing SAAS.
+    description: The AsyncAPI specification describes the message broker configuration for the Howestprime.Ticketing SAAS.
     x-metadata:
         BoundedContext: Ticketing
 
@@ -38,6 +36,20 @@ channels:
                     name: howestprime
                     type: topic
                     routingKey: howestprime.movies.movie.movieregistered
+    
+    Howestprime.Movies.MovieEvent.BookingOpened:
+        address: howestprime.movies.movieevent.bookingopened
+        title: Booking opened
+        messages:
+            BookingOpened:
+                $ref: '#/components/messages/BookingOpened'
+        bindings:
+            amqp:
+                is: routingKey
+                exchange:
+                    name: howestprime
+                    type: topic
+                    routingKey: howestprime.movies.movieevent.bookingopened
 
     # Send channels
 
@@ -78,7 +90,15 @@ operations:
             $ref: '#/channels/Howestprime.Movies.Movie.MovieRegistered'
         description: Handles a MovieRegistered event from the Howestprime Movies service.
         messages:
-            - $ref: '#/channels/Howestprime.movies.movie.movieregistered/messages/MovieRegistered'
+            - $ref: '#/channels/Howestprime.Movies.Movie.MovieRegistered/messages/MovieRegistered'
+    
+    WhenBookingOpenedCreateOrder:
+        action: receive
+        channel:
+            $ref: '#/channels/Howestprime.Movies.MovieEvent.BookingOpened'
+        description: Handles a BookingOpened event from the Howestprime Movies service.
+        messages:
+            - $ref: '#/channels/Howestprime.Movies.MovieEvent.BookingOpened/messages/BookingOpened'
 
     # Send operations
 
@@ -111,6 +131,14 @@ components:
             summary: Indicates a new movie has been registered
             payload:
                 $ref: '#/components/schemas/MovieRegisteredPayload'
+        BookingOpened:
+            name: BookingOpened
+            title: Booking opened
+            summary: Indicates that booking has been opened for a movie
+            payload:
+                $ref: '#/components/schemas/BookingOpenedPayload'
+
+        # Suggestion
         SuggestionSendCreateSuggestion:
             name: SuggestionSendCreateSuggestion
             title: Suggestion create request
@@ -157,7 +185,38 @@ components:
                     type: integer
                 posterUrl:
                     type: string
+        BookingOpenedPayload:
+            type: object
+            required:
+                - bookingId
+                - movieId
+                - room
+                - showtime
+                - standardVisitors
+                - discountedVisitors
+                - seatNumbers
+            properties:
+                bookingId:
+                    type: string
+                    format: uuid
+                movieId:
+                    type: string
+                    format: uuid
+                room:
+                    type: string
+                showtime:
+                    type: string
+                    format: date-time
+                standardVisitors:
+                    type: integer
+                discountedVisitors:
+                    type: integer
+                seatNumbers:
+                    type: array
+                    items:
+                        type: integer
 
+        # Suggestions
         SuggestionSendCreateSuggestionPayload:
             type: object
             required:
