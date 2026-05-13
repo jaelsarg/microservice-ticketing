@@ -5,7 +5,6 @@ import {
     Movie,
     MovieDuration,
     MovieId,
-    MovieRepository,
     MovieTitle,
     PosterUrl,
 } from '@/Domain/Ticketing/Movies/mod.ts';
@@ -31,9 +30,7 @@ export class SaveMovie implements UseCase<SaveMovieInput, void> {
     async execute(input: SaveMovieInput): Promise<void> {
         this._logger.info('Starting movie saving process', { input });
 
-        const result = await this._uow.do<void>(async () => {
-            const movieRepo = this._uow.getRepository<MovieRepository>('Movie');
-
+        return await this._uow.do<void>(async () => {
             const movieId = MovieId.create(input.id);
             const movieTitle = MovieTitle.create(input.title);
             const movieDuration = MovieDuration.create(input.duration);
@@ -50,11 +47,9 @@ export class SaveMovie implements UseCase<SaveMovieInput, void> {
                 moviePosterUrl,
             );
 
-            await movieRepo.save(movie);
+            await this._uow.save(movie);
 
             this._logger.info('Movie saved successfully', { movieId: movie.id.value });
         });
-
-        return result;
     }
 }
