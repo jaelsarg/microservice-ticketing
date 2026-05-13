@@ -18,6 +18,7 @@ export {
     InvalidMovieDurationException,
     InvalidMovieTitleException,
     InvalidPosterUrlException,
+    MovieNotFoundException,
 } from './MovieExceptions.ts';
 
 // Repository Interface
