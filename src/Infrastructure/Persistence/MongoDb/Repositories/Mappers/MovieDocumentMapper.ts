@@ -1,6 +1,7 @@
 import {
     AgeRating,
     Genre,
+    Money,
     Movie,
     MovieDuration,
     MovieId,
@@ -38,6 +39,7 @@ export class MovieDocumentMapper implements DocumentMapper<Movie> {
             document.genres,
             document.ageRating,
             document.posterUrl,
+            document.price,
         );
 
         return movie;
@@ -45,20 +47,22 @@ export class MovieDocumentMapper implements DocumentMapper<Movie> {
 
     private reconstituteFromDocument(
         id: string,
-        titel: string,
+        title: string,
         duration: number,
         genres: string[],
         ageRating: number,
         posterUrl: string,
+        price: number,
     ): Movie {
         const movie = Object.create(Movie.prototype);
 
         movie['_id'] = MovieId.create(id);
-        movie['_title'] = MovieTitle.create(titel);
+        movie['_title'] = MovieTitle.create(title);
         movie['_duration'] = MovieDuration.create(duration);
         movie['_genres'] = genres.map((genre) => Genre.create(genre));
         movie['_ageRating'] = AgeRating.create(ageRating);
         movie['_posterUrl'] = PosterUrl.create(posterUrl);
+        movie['_price'] = Money.create(price);
 
         return movie;
     }
