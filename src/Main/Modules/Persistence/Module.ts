@@ -15,8 +15,10 @@ import {
 } from '@/Infrastructure/Persistence/MongoDb/mod.ts';
 import {
     MongoDbMovieRepository,
+    MongoDbOrderRepository,
     MongoDbSuggestionRepository,
     MovieDocumentMapper,
+    OrderDocumentMapper,
     SuggestionDocumentMapper,
 } from '@/Infrastructure/Persistence/MongoDb/Repositories/mod.ts';
 import {
@@ -91,13 +93,21 @@ export class Persistence implements Module {
             async (serviceProvider: ServiceProvider) => {
                 const mongoClient =
                     (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
+
                 const eventPublisher =
                     (await serviceProvider.getService<InMemoryDomainEventPublisher>(
                         'InMemoryDomainEventPublisher',
                     )).getOrThrow();
+
                 const movieRepository = (await serviceProvider.getService<MongoDbMovieRepository>(
                     MongoDbMovieRepository.name,
                 )).getOrThrow();
+
+                const orderRepository = (await serviceProvider.getService<MongoDbOrderRepository>(
+                    MongoDbOrderRepository.name,
+                )).getOrThrow();
+
+                // Suggestions
                 const suggestionRepository = (await serviceProvider.getService<
                     MongoDbSuggestionRepository
                 >(
@@ -105,8 +115,11 @@ export class Persistence implements Module {
                 )).getOrThrow();
 
                 const unitOfWork = new MongoDbUnitOfWork(mongoClient.session);
-                unitOfWork.registerRepository(suggestionRepository);
                 unitOfWork.registerRepository(movieRepository);
+                unitOfWork.registerRepository(orderRepository);
+
+                // Suggestions
+                unitOfWork.registerRepository(suggestionRepository);
 
                 const interceptors = [
                     new PublishDomainEventsMongoDbUnitOfWorkInterceptor(
@@ -134,6 +147,18 @@ export class Persistence implements Module {
             },
         );
 
+        serviceCollection.addScoped(
+            MongoDbOrderRepository.name,
+            async (serviceProvider: ServiceProvider) => {
+                const mongoClient =
+                    (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
+                const mapper = new OrderDocumentMapper();
+
+                return new MongoDbOrderRepository(mongoClient, mapper);
+            },
+        );
+
+        // Suggestions
         serviceCollection.addScoped(
             MongoDbSuggestionRepository.name,
             async (serviceProvider: ServiceProvider) => {
