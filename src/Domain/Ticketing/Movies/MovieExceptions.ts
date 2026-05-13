@@ -1,4 +1,5 @@
 import { DomainException } from '@/Domain/Shared/mod.ts';
+import { MovieId } from '@/Domain/Ticketing/Movies/mod.ts';
 
 // Exception thrown when trying to create a Movie with an invalid title
 export class InvalidMovieTitleException extends DomainException {
@@ -58,6 +59,14 @@ export class InvalidMoneyException extends DomainException {
     constructor(money: number) {
         super(
             `Movie money "${money}" is invalid. Money must be a positive number.`,
+        );
+    }
+}
+
+export class MovieNotFoundException extends DomainException {
+    constructor(movieId: MovieId) {
+        super(
+            `Movie with ID "${movieId.value}" not found.`,
         );
     }
 }
