@@ -67,3 +67,9 @@ export class InvalidBookingIdException extends DomainException {
         super('Booking ID cannot be empty.');
     }
 }
+
+export class OrderNotFoundException extends DomainException {
+    constructor(orderId: string) {
+        super(`Order with ID "${orderId}" not found.`);
+    }
+}
