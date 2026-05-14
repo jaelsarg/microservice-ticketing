@@ -1,5 +1,19 @@
 @baseUrl = http://localhost:8000
 @suggestionId = 8fdd8b8e-8de4-4b9a-8e16-868b72f4f469
+@orderId = e00fedce-47f5-410e-9265-c6b3cea96228
+
+### Add customer to order
+POST {{baseUrl}}/api/orders/{{orderId}}/customer
+Content-Type: application/json
+Accept: application/json
+
+{
+    "salutation": "Mr.",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "agreeToTerms": true
+}
 
 ### Create suggestion
 POST {{baseUrl}}/api/suggestions
