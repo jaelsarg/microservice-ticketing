@@ -1,24 +1,16 @@
-import { Entity, UUIDEntityId } from '@/Domain/Shared/mod.ts';
+import { ValueObject } from '@/Domain/Shared/mod.ts';
 import {
     AgeRating,
     Genre,
     Money,
     MovieDuration,
+    MovieId,
     MovieTitle,
     PosterUrl,
 } from '@/Domain/Ticketing/Movies/mod.ts';
 
-export class MovieInfoId extends UUIDEntityId {
-    private constructor(id?: string) {
-        super(id);
-    }
-
-    static create(id?: string): MovieInfoId {
-        return new MovieInfoId(id);
-    }
-}
-
-export class MovieInfo extends Entity<MovieInfoId> {
+export class MovieInfo extends ValueObject {
+    private readonly _movieId: MovieId;
     private readonly _title: MovieTitle;
     private readonly _duration: MovieDuration;
     private readonly _genres: Genre[];
@@ -27,7 +19,7 @@ export class MovieInfo extends Entity<MovieInfoId> {
     private readonly _price: Money;
 
     private constructor(
-        id: MovieInfoId,
+        movieId: MovieId,
         title: MovieTitle,
         duration: MovieDuration,
         genres: Genre[],
@@ -35,7 +27,8 @@ export class MovieInfo extends Entity<MovieInfoId> {
         ageRating: AgeRating,
         price: Money,
     ) {
-        super(id);
+        super();
+        this._movieId = movieId;
         this._title = title;
         this._duration = duration;
         this._genres = genres;
@@ -45,6 +38,7 @@ export class MovieInfo extends Entity<MovieInfoId> {
     }
 
     static create(
+        movieId: MovieId,
         title: MovieTitle,
         duration: MovieDuration,
         genres: Genre[],
@@ -53,7 +47,7 @@ export class MovieInfo extends Entity<MovieInfoId> {
         price: Money,
     ): MovieInfo {
         const movieInfo = new MovieInfo(
-            MovieInfoId.create(),
+            movieId,
             title,
             duration,
             genres,
@@ -63,6 +57,10 @@ export class MovieInfo extends Entity<MovieInfoId> {
         );
 
         return movieInfo;
+    }
+
+    get movieId(): MovieId {
+        return this._movieId;
     }
 
     get title(): MovieTitle {
@@ -87,5 +85,9 @@ export class MovieInfo extends Entity<MovieInfoId> {
 
     get price(): Money {
         return this._price;
+    }
+
+    override equals(other: MovieInfo): boolean {
+        return this._movieId.equals(other._movieId);
     }
 }

@@ -77,6 +77,7 @@ export class CreateOrderFromBooking implements UseCase<CreateOrderFromBookingInp
 
     private createMovieInfo(movie: Movie): MovieInfo {
         return MovieInfo.create(
+            movie.id,
             movie.title,
             movie.duration,
             movie.genres,
