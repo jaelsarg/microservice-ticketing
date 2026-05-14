@@ -6,7 +6,6 @@ import {
     InvalidOrderStatusException,
     InvalidTicketAmountException,
     OrderStatus,
-    OrderStatusState,
     TermsNotAcceptedException,
     Ticket,
 } from '@/Domain/Ticketing/Orders/mod.ts';
@@ -100,28 +99,26 @@ export class Order extends AggregateRoot<OrderId> {
         return this._agreeToTerms;
     }
 
-    acceptTerms(): void {
-        if (this._status.value !== OrderStatusState.Open) {
+    acceptTerms(value: boolean): void {
+        if (!this._status.equals(OrderStatus.Open)) {
             throw new InvalidOrderStatusException(this._status.value);
         }
 
-        this._agreeToTerms = true;
+        this._agreeToTerms = value;
     }
 
-    addCustomer(customer: Customer): void {
+    addCustomer(agreeToTerms: boolean, customer: Customer): void {
+        this.acceptTerms(agreeToTerms);
+
         if (this._agreeToTerms === false) {
             throw new TermsNotAcceptedException();
-        }
-
-        if (this._status.value !== OrderStatusState.Open) {
-            throw new InvalidOrderStatusException(this._status.value);
         }
 
         this._customer = Optional.of<Customer>(customer);
     }
 
     markAsPaid(): void {
-        if (this._status.value !== OrderStatusState.Open) {
+        if (!this._status.equals(OrderStatus.Open)) {
             throw new InvalidOrderStatusException(this._status.value);
         }
 
@@ -133,7 +130,7 @@ export class Order extends AggregateRoot<OrderId> {
     }
 
     releaseTickets(): void {
-        if (this._status.value !== OrderStatusState.Paid) {
+        if (!this._status.equals(OrderStatus.Paid)) {
             throw new InvalidOrderStatusException(this._status.value);
         }
 
@@ -141,7 +138,7 @@ export class Order extends AggregateRoot<OrderId> {
     }
 
     cancel(): void {
-        if (this._status.value !== OrderStatusState.Open) {
+        if (!this._status.equals(OrderStatus.Open)) {
             throw new InvalidOrderStatusException(this._status.value);
         }
 
