@@ -1,20 +1,19 @@
 import { BookingId, Customer, CustomerEmail, CustomerFirstName, CustomerLastName, CustomerSalutation, CustomerSalutationType, InvalidOrderStatusException, MovieInfo, Order, OrderId, OrderStatus, OrderStatusState, Seat, TermsNotAcceptedException, Ticket, VisitorType } from '@/Domain/Ticketing/Orders/mod.ts';
-import { AgeRating, Genre, Money, MovieDuration, MovieTitle, PosterUrl } from '@/Domain/Ticketing/Movies/mod.ts';
+import { AgeRating, Genre, Money, MovieDuration, MovieId, MovieTitle, PosterUrl } from '@/Domain/Ticketing/Movies/mod.ts';
 import { assertEquals, assertThrows } from '@std/assert';
 import { InvalidTicketAmountException } from '@/Domain/Ticketing/Orders/OrderExceptions.ts';
 import { VisitorTypeState } from '@/Domain/Ticketing/Orders/ValueObjects/VisitorType.ts';
 
-
 const createTickets = () =>
   [
     Ticket.create(
-        MovieInfo.create(MovieTitle.create('Test Movie'), MovieDuration.create(123), [ Genre.create('Action'), Genre.create('Adventure') ], PosterUrl.create('http://posterurl.jpg'), AgeRating.create(12), Money.create(0.15 * 123)),
+        MovieInfo.create(MovieId.create('991c1264-efc3-4eaa-8df3-4bb419a3b96f'), MovieTitle.create('Test Movie'), MovieDuration.create(123), [ Genre.create('Action'), Genre.create('Adventure') ], PosterUrl.create('http://posterurl.jpg'), AgeRating.create(12), Money.create(0.15 * 123)),
         Seat.create(12, VisitorType.create(VisitorTypeState.Standard)),
         'Blue Room',
         new Date('2026-05-15T19:00:00Z')
     ),
     Ticket.create(
-        MovieInfo.create(MovieTitle.create('Test Movie'), MovieDuration.create(123), [ Genre.create('Action'), Genre.create('Adventure') ], PosterUrl.create('http://posterurl.jpg'), AgeRating.create(12), Money.create(0.15 * 123)),
+        MovieInfo.create(MovieId.create('4442d8e5-f939-4f07-9b14-aa83f49d0d34'), MovieTitle.create('Test Movie 2'), MovieDuration.create(123), [ Genre.create('Action'), Genre.create('Adventure') ], PosterUrl.create('http://posterurl.jpg'), AgeRating.create(12), Money.create(0.15 * 123)),
         Seat.create(12, VisitorType.create(VisitorTypeState.Discounted)),
         'Blue Room',
         new Date('2026-05-15T19:00:00Z')
@@ -57,7 +56,7 @@ Deno.test('[Unit] - Order - acceptTerms - valid - set agreeToTerms to true', () 
     const order = Order.create(bookingId, tickets);
 
     // Act
-    order.acceptTerms();
+    order.acceptTerms(true);
 
     // Assert
     assertEquals(order.agreeToTerms, true);
@@ -68,12 +67,12 @@ Deno.test('[Unit] - Order - acceptTerms - invalid - throws InvalidOrderStatusExc
     const bookingId = BookingId.create('bf65cb30-15b0-4e78-aebd-8a38f08940d7');
     const tickets = createTickets();
     const order = Order.create(bookingId, tickets);
-    order.acceptTerms();
+    order.acceptTerms(true);
     order.markAsPaid();
 
     // Act & Assert
     assertThrows(
-        () => order.acceptTerms(),
+        () => order.acceptTerms(true),
         InvalidOrderStatusException
     );
 });
@@ -83,11 +82,10 @@ Deno.test('[Unit] - Order - addCustomer - valid - set customer', () => {
     const bookingId = BookingId.create('bf65cb30-15b0-4e78-aebd-8a38f08940d7');
     const tickets = createTickets();
     const order = Order.create(bookingId, tickets);
-    order.acceptTerms();
     const customer = Customer.create(CustomerSalutation.create(CustomerSalutationType.Mr), CustomerFirstName.create('John'), CustomerLastName.create('Doe'), CustomerEmail.create('john.doe@email.com'));
 
     // Act
-    order.addCustomer(customer);
+    order.addCustomer(true, customer);
 
     // Assert
     assertEquals(order.customer.isPresent, true);
@@ -102,7 +100,7 @@ Deno.test('[Unit] - Order - addCustomer - invalid agreement - should throw Terms
 
     // Act & Assert
     assertThrows(
-        () => order.addCustomer(customer),
+        () => order.addCustomer(false, customer),
         TermsNotAcceptedException
     );
 });
@@ -112,13 +110,13 @@ Deno.test('[Unit] - Order - addCustomer - invalid status - should throw InvalidO
     const bookingId = BookingId.create('bf65cb30-15b0-4e78-aebd-8a38f08940d7');
     const tickets = createTickets();
     const order = Order.create(bookingId, tickets);
-    order.acceptTerms();
+    order.acceptTerms(true);
     order.markAsPaid();
     const customer = Customer.create(CustomerSalutation.create(CustomerSalutationType.Mr), CustomerFirstName.create('John'), CustomerLastName.create('Doe'), CustomerEmail.create('john.doe@email.com'));
 
     // Act & Assert
     assertThrows(
-        () => order.addCustomer(customer),
+        () => order.addCustomer(true, customer),
         InvalidOrderStatusException
     );
 });
@@ -128,7 +126,7 @@ Deno.test('[Unit] - Order - markAsPaid - valid - set status to Paid', () => {
     const bookingId = BookingId.create('bf65cb30-15b0-4e78-aebd-8a38f08940d7');
     const tickets = createTickets();
     const order = Order.create(bookingId, tickets);
-    order.acceptTerms();
+    order.acceptTerms(true);
 
     // Act
     order.markAsPaid();
@@ -142,7 +140,7 @@ Deno.test('[Unit] - Order - markAsPaid - invalid status - should throw InvalidOr
     const bookingId = BookingId.create('bf65cb30-15b0-4e78-aebd-8a38f08940d7');
     const tickets = createTickets();
     const order = Order.create(bookingId, tickets);
-    order.acceptTerms();
+    order.acceptTerms(true);
     order.cancel();
 
     // Act & Assert
@@ -170,7 +168,7 @@ Deno.test('[Unit] - Order - releaseTickets - valid - set status to Released', ()
     const bookingId = BookingId.create('bf65cb30-15b0-4e78-aebd-8a38f08940d7');
     const tickets = createTickets();
     const order = Order.create(bookingId, tickets);
-    order.acceptTerms();
+    order.acceptTerms(true);
     order.markAsPaid();
 
     // Act
@@ -185,7 +183,7 @@ Deno.test('[Unit] - Order - releaseTickets - invalid status - should throw Inval
     const bookingId = BookingId.create('bf65cb30-15b0-4e78-aebd-8a38f08940d7');
     const tickets = createTickets();
     const order = Order.create(bookingId, tickets);
-    order.acceptTerms();
+    order.acceptTerms(true);
 
     // Act & Assert
     assertThrows(
@@ -199,7 +197,7 @@ Deno.test('[Unit] - Order - cancel - valid - set status to Cancelled', () => {
     const bookingId = BookingId.create('bf65cb30-15b0-4e78-aebd-8a38f08940d7');
     const tickets = createTickets();
     const order = Order.create(bookingId, tickets);
-
+    order.acceptTerms(true);
     // Act
     order.cancel();
 
@@ -212,7 +210,7 @@ Deno.test('[Unit] - Order - cancel - invalid status - should throw InvalidOrderS
     const bookingId = BookingId.create('bf65cb30-15b0-4e78-aebd-8a38f08940d7');
     const tickets = createTickets();
     const order = Order.create(bookingId, tickets);
-    order.acceptTerms();
+    order.acceptTerms(true);
     order.markAsPaid();
 
     // Act & Assert

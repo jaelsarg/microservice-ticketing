@@ -1,10 +1,11 @@
-import { MovieInfo, MovieInfoId, Seat, Ticket, VisitorType, VisitorTypeState } from '@/Domain/Ticketing/Orders/mod.ts';
-import { AgeRating, Genre, Money, MovieDuration, MovieTitle, PosterUrl } from '@/Domain/Ticketing/Movies/mod.ts';
+import { MovieInfo, Seat, Ticket, VisitorType, VisitorTypeState } from '@/Domain/Ticketing/Orders/mod.ts';
+import { AgeRating, Genre, Money, MovieDuration, MovieId, MovieTitle, PosterUrl } from '@/Domain/Ticketing/Movies/mod.ts';
 import { assertEquals } from '@std/assert';
 
 Deno.test('[Unit] - Ticket - create - valid input - returns aggregate with value objects', () => {
     // Arrange
     const movieInfo = MovieInfo.create(
+        MovieId.create(),
         MovieTitle.create("Title of movie"),
         MovieDuration.create(123),
         [ Genre.create("Animation"), Genre.create("Family") ],
@@ -20,7 +21,7 @@ Deno.test('[Unit] - Ticket - create - valid input - returns aggregate with value
     const ticket = Ticket.create(movieInfo, seat, room, showTime);
 
     // Assert
-    assertEquals(ticket.movieInfo.id instanceof MovieInfoId, true);
+    assertEquals(ticket.movieInfo.movieId instanceof MovieId, true);
     assertEquals(ticket.movieInfo.title.value, movieInfo.title.value);
     assertEquals(ticket.movieInfo.duration.value, movieInfo.duration.value);
     assertEquals(ticket.movieInfo.genres.values, movieInfo.genres.values);
@@ -33,6 +34,7 @@ Deno.test('[Unit] - Ticket - create - valid input - returns aggregate with value
 Deno.test('[Unit] - Ticket - create - valid input; discounted - returns aggregate with value objects', () => {
     // Arrange
     const movieInfo = MovieInfo.create(
+        MovieId.create(),
         MovieTitle.create("Title of movie"),
         MovieDuration.create(123),
         [ Genre.create("Animation"), Genre.create("Family") ],
@@ -48,7 +50,7 @@ Deno.test('[Unit] - Ticket - create - valid input; discounted - returns aggregat
     const ticket = Ticket.create(movieInfo, seat, room, showTime);
 
     // Assert
-    assertEquals(ticket.movieInfo.id instanceof MovieInfoId, true);
+    assertEquals(ticket.movieInfo.movieId instanceof MovieId, true);
     assertEquals(ticket.movieInfo.title.value, movieInfo.title.value);
     assertEquals(ticket.movieInfo.duration.value, movieInfo.duration.value);
     assertEquals(ticket.movieInfo.genres.values, movieInfo.genres.values);
@@ -61,6 +63,7 @@ Deno.test('[Unit] - Ticket - create - valid input; discounted - returns aggregat
 Deno.test('[Unit] - Ticket - getters - returns correct values', () => {
     // Arrange
     const movieInfo = MovieInfo.create(
+        MovieId.create(),
         MovieTitle.create("Title of movie"),
         MovieDuration.create(123),
         [ Genre.create("Animation"), Genre.create("Family") ],
