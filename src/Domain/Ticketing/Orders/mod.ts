@@ -3,7 +3,7 @@ export { Order, OrderId } from './Order.ts';
 
 // Entity
 export { Ticket, TicketId } from './Ticket.ts';
-export { MovieInfo, MovieInfoId } from './MovieInfo.ts';
+export { MovieInfo } from '@/Domain/Ticketing/Orders/ValueObjects/MovieInfo.ts';
 
 // Value Objects
 export { BookingId } from './ValueObjects/BookingId.ts';
@@ -30,5 +30,6 @@ export {
     InvalidSeatNumberException,
     InvalidStatusTransitionError,
     InvalidTicketAmountException,
+    OrderNotFoundException,
     TermsNotAcceptedException,
 } from './OrderExceptions.ts';
