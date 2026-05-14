@@ -3,8 +3,8 @@ import {
     serializeObjectToDocument,
 } from '@/Infrastructure/Persistence/MongoDb/Shared/mod.ts';
 import {
+    Customer,
     MovieInfo,
-    MovieInfoId,
     Order,
     OrderId,
     OrderStatus,
@@ -21,6 +21,7 @@ import {
     Genre,
     Money,
     MovieDuration,
+    MovieId,
     MovieTitle,
     PosterUrl,
 } from '@/Domain/Ticketing/Movies/mod.ts';
@@ -49,12 +50,19 @@ type SeatDocument = {
     visitorType: VisitorTypeState;
 };
 
+type CustomerDocument = {
+    salutation: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+};
+
 export class OrderDocumentMapper implements DocumentMapper<Order> {
     // Convert an Order aggregate to a MongoDB document
     toDocument(order: Order): Document {
         const tickets: TicketDocument[] = order.tickets.map((ticket) => {
             const movieInfo: MovieInfoDocument = {
-                id: ticket.movieInfo.id.toString(),
+                id: ticket.movieInfo.movieId.toString(),
                 title: ticket.movieInfo.title.value,
                 duration: ticket.movieInfo.duration.value,
                 genres: ticket.movieInfo.genres.map((genre) => genre.value),
@@ -78,12 +86,23 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
             };
         });
 
+        const customer = order.customer.isPresent
+            ? {
+                salutation: order.customer.value.salutation.value,
+                firstName: order.customer.value.firstName.value,
+                lastName: order.customer.value.lastName.value,
+                email: order.customer.value.email.value,
+            }
+            : null;
+
         const document = serializeObjectToDocument({
             id: order.id.toString(),
+            bookingId: order.bookingId.toString(),
             tickets: tickets,
             price: order.price.value,
             status: order.status.value,
             agreeToTerms: order.agreeToTerms,
+            customer: customer,
         });
 
         return document;
@@ -94,12 +113,17 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
         const ticketsData = Array.isArray(document.tickets) ? document.tickets : [];
         const tickets = ticketsData.map((ticketDoc) => this.reconstituteTicket(ticketDoc));
 
+        const customerData = document.customer;
+        const customer = customerData ? this.reconstituteCustomer(customerData) : null;
+
         const order = this.reconstituteFromDocument(
             (document.id ?? document._id) as string,
+            document.bookingId,
             tickets,
             document.price,
-            document.status.value,
+            document.status,
             document.agreeToTerms,
+            customer,
         );
 
         return order;
@@ -107,18 +131,24 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
 
     private reconstituteFromDocument(
         id: string,
+        bookingId: string,
         tickets: Ticket[],
         price: number,
         status: string,
         agreeToTerms: boolean,
+        customer: Customer | null,
     ): Order {
         const order = Object.create(Order.prototype);
 
         order['_id'] = OrderId.create(id);
+        order['_bookingId'] = OrderId.create(bookingId);
         order['_tickets'] = tickets;
         order['_price'] = Money.create(price);
         order['_status'] = OrderStatus.create(status as OrderStatusState);
         order['_agreeToTerms'] = agreeToTerms;
+        order['_customer'] = customer;
+
+        order['_domainEvents'] = [];
 
         return order;
     }
@@ -139,7 +169,7 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
     private reconstituteMovieInfo(movieInfoDoc: MovieInfoDocument) {
         const movieInfo = Object.create(MovieInfo.prototype);
 
-        movieInfo['_id'] = MovieInfoId.create(movieInfoDoc.id);
+        movieInfo['_movieId'] = MovieId.create(movieInfoDoc.id);
         movieInfo['_title'] = MovieTitle.create(movieInfoDoc.title);
         movieInfo['_duration'] = MovieDuration.create(movieInfoDoc.duration);
         movieInfo['_genres'] = movieInfoDoc.genres.map((genre) => Genre.create(genre));
@@ -157,5 +187,16 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
         seat['_visitorType'] = VisitorType.create(seatDoc.visitorType as VisitorTypeState);
 
         return seat;
+    }
+
+    private reconstituteCustomer(customerDoc: CustomerDocument) {
+        const customer = Object.create(Customer.prototype);
+
+        customer['_salutation'] = customerDoc.salutation;
+        customer['_firstName'] = customerDoc.firstName;
+        customer['_lastName'] = customerDoc.lastName;
+        customer['_email'] = customerDoc.email;
+
+        return customer;
     }
 }
