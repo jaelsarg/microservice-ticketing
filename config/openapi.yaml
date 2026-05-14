@@ -14,6 +14,39 @@ tags:
       description: Create and read suggestions
 
 paths:
+    /api/orders/{orderId}/customer:
+        post:
+            tags:
+                - Orders
+            summary: Add customer to order
+            operationId: addCustomerToOrder
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddCustomerToOrderRequest'
+                        examples:
+                            addCustomerToOrder:
+                                value:
+                                    salutation: Mr.
+                                    firstName: John
+                                    lastName: Doe
+                                    email: john.doe@email.com
+                                    agreeToTerms: true
+            responses:
+                '201':
+                    description: Customer added to order
+                    headers:
+                        Location:
+                            $ref: '#/components/headers/Location'
+                '400':
+                    $ref: '#/components/responses/BadRequestProblem'
+                '404':
+                    $ref: '#/components/responses/NotFoundProblem'
+                '500':
+                    $ref: '#/components/responses/InternalServerErrorProblem'
+
     /api/suggestions:
         get:
             tags:
@@ -102,6 +135,13 @@ paths:
 
 components:
     parameters:
+        OrderId:
+            name: orderId
+            in: path
+            required: true
+            description: Order identifier
+            schema:
+                $ref: '#/components/schemas/UUID'
         SuggestionId:
             name: suggestionId
             in: path
@@ -139,6 +179,40 @@ components:
                         $ref: '#/components/schemas/ProblemDetails'
 
     schemas:
+        AddCustomerToOrderRequest:
+            type: object
+            required:
+                - salutation
+                - firstName
+                - lastName
+                - email
+                - agreeToTerms
+            properties:
+                salutation:
+                    type: string
+                    description: Customer's salutation
+                    enum:
+                        - Mr.
+                        - Ms.
+                        - Mx.
+                    example: Mr.
+                firstName:
+                    type: string
+                    description: Customer's first name
+                    example: John
+                lastName:
+                    type: string
+                    description: Customer's last name
+                    example: Doe
+                email:
+                    type: string
+                    format: email
+                    description: Customer's email address
+                    example: john.doe@email.com
+                agreeToTerms:
+                    type: boolean
+                    description: Whether the customer agrees to the terms and conditions
+                    example: true
         CreateSuggestionRequest:
             type: object
             required:
