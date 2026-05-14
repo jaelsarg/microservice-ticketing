@@ -13,6 +13,7 @@ import type {
     SuggestionListItemReadModel,
 } from '@/Application/Ports/Queries/mod.ts';
 import {
+    AddCustomerToOrderController,
     CreateSuggestionController,
     GetSuggestionByIdController,
     ListSuggestionsController,
@@ -23,6 +24,7 @@ import {
     type WebApiController,
 } from '@/Infrastructure/WebApi/Shared/mod.ts';
 import { IllegalStateException } from '@domaincrafters/std';
+import { AddCustomerToOrder, AddCustomerToOrderInput } from '@/Application/Ticketing/Orders/mod.ts';
 
 export class WebApiControllerFactory implements ControllerFactory {
     private readonly _serviceProvider: ServiceProvider;
@@ -37,6 +39,10 @@ export class WebApiControllerFactory implements ControllerFactory {
         }
 
         switch (ctx.routeName) {
+            case AddCustomerToOrderController.name:
+                return await this.createAddCustomerToOrderController();
+
+            // Suggestions
             case CreateSuggestionController.name:
                 return await this.createCreateSuggestionController();
             case ListSuggestionsController.name:
@@ -51,6 +57,15 @@ export class WebApiControllerFactory implements ControllerFactory {
         }
     }
 
+    private async createAddCustomerToOrderController(): Promise<AddCustomerToOrderController> {
+        const useCase = (await this._serviceProvider.getService<
+            UseCase<AddCustomerToOrderInput, string>
+        >(AddCustomerToOrder.name)).getOrThrow();
+
+        return new AddCustomerToOrderController(useCase);
+    }
+
+    // Suggestions
     private async createCreateSuggestionController(): Promise<CreateSuggestionController> {
         const useCase = (await this._serviceProvider.getService<
             UseCase<CreateSuggestionUseCaseInput, string>
