@@ -15,6 +15,7 @@ import type {
 import {
     AddCustomerToOrderController,
     CreateSuggestionController,
+    GetOrderByBookingIdController,
     GetSuggestionByIdController,
     ListSuggestionsController,
 } from '@/Infrastructure/WebApi/Controllers/mod.ts';
@@ -24,7 +25,7 @@ import {
     type WebApiController,
 } from '@/Infrastructure/WebApi/Shared/mod.ts';
 import { IllegalStateException } from '@domaincrafters/std';
-import { AddCustomerToOrder, AddCustomerToOrderInput } from '@/Application/Ticketing/Orders/mod.ts';
+import { AddCustomerToOrder, AddCustomerToOrderInput, GetOrderByBookingId, GetOrderByBookingIdInput, GetOrderByBookingIdOutput } from '@/Application/Ticketing/Orders/mod.ts';
 
 export class WebApiControllerFactory implements ControllerFactory {
     private readonly _serviceProvider: ServiceProvider;
@@ -41,6 +42,8 @@ export class WebApiControllerFactory implements ControllerFactory {
         switch (ctx.routeName) {
             case AddCustomerToOrderController.name:
                 return await this.createAddCustomerToOrderController();
+            case GetOrderByBookingIdController.name:
+                return await this.createGetOrderByBookingIdController();
 
             // Suggestions
             case CreateSuggestionController.name:
@@ -63,6 +66,14 @@ export class WebApiControllerFactory implements ControllerFactory {
         >(AddCustomerToOrder.name)).getOrThrow();
 
         return new AddCustomerToOrderController(useCase);
+    }
+
+    private async createGetOrderByBookingIdController(): Promise<GetOrderByBookingIdController> {
+        const useCase = (await this._serviceProvider.getService<
+            UseCase<GetOrderByBookingIdInput, GetOrderByBookingIdOutput>
+        >(GetOrderByBookingId.name)).getOrThrow();
+
+        return new GetOrderByBookingIdController(useCase);
     }
 
     // Suggestions
