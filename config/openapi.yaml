@@ -47,6 +47,28 @@ paths:
                 '500':
                     $ref: '#/components/responses/InternalServerErrorProblem'
 
+    /api/orders/{bookingId}:
+        get:
+            tags:
+                - Orders
+            summary: Gets the orders for a booking Id
+            operationId: getOrderByBookingId
+            responses:
+                '200':
+                    description: Orders retrieved
+                    content:
+                        application/json:
+                            schema: 
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/OrderResponse'
+                '400':
+                    $ref: '#/components/responses/BadRequestProblem'
+                '404':
+                    $ref: '#/components/responses/NotFoundProblem'
+                '500':
+                    $ref: '#/components/responses/InternalServerErrorProblem'
+
     /api/suggestions:
         get:
             tags:
@@ -142,6 +164,14 @@ components:
             description: Order identifier
             schema:
                 $ref: '#/components/schemas/UUID'
+        BookingId:
+            name: bookingId
+            in: path
+            required: true
+            description: Booking identifier
+            schema:
+                $ref: '#/components/schemas/UUID'
+
         SuggestionId:
             name: suggestionId
             in: path
@@ -236,6 +266,100 @@ components:
                     maxLength: 2000
                     example: Cache frequently requested movie data to reduce latency.
 
+        OrderResponse:
+            type: object
+            required:
+                - id
+                - bookingId
+                - status
+                - price
+                - agreeToTerms
+                - tickets
+            properties:
+                id:
+                    $ref: '#/components/schemas/UUID'
+                bookingId:
+                    $ref: '#/components/schemas/UUID'
+                status:
+                    type: string
+                    enum:
+                        - open
+                        - paid
+                        - ticketReleased
+                        - cancelled
+                    example: open
+                price:
+                    type: number
+                    example: 29.99
+                agreeToTerms:
+                    type: boolean
+                    example: true
+                customer:
+                    type: object
+                    required:
+                        - salutation
+                        - firstName
+                        - lastName
+                        - email
+                    properties:
+                        salutation:
+                            type: string
+                            description: Customer's salutation
+                            enum:
+                                - Mr.
+                                - Ms.
+                                - Mx.
+                            example: Mr.
+                        firstName:
+                            type: string
+                            description: Customer's first name
+                            example: John
+                        lastName:
+                            type: string
+                            description: Customer's last name
+                            example: Doe
+                        email:
+                            type: string
+                            format: email
+                            description: Customer's email address
+                            example:
+                    tickets:
+                        type: array
+                        items:
+                            type: object
+                            required:
+                                - ticketId
+                                - seatNumber
+                                - visitorType
+                                - price
+                                - movieId
+                                - room
+                                - showtime
+                            properties:
+                                ticketId:
+                                    $ref: '#/components/schemas/UUID'
+                                seatNumber:
+                                    type: number
+                                    example: 12
+                                visitorType:
+                                    type: string
+                                    enum:
+                                        - standard
+                                        - discounted
+                                    example: standard
+                                price:
+                                    type: number
+                                    example: 14.99
+                                movieId:
+                                    $ref: '#/components/schemas/UUID'
+                                room:
+                                    type: string
+                                    example: Blue room
+                                showtime:
+                                    type: string
+                                    format: date-time
+                                    example: 2024-07-01T19:30:00Z
+                               
         SuggestionResponse:
             type: object
             required:
