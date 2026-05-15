@@ -97,7 +97,7 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
 
         const document = serializeObjectToDocument({
             id: order.id.toString(),
-            bookingId: order.bookingId.toString(),
+            bookingId: order.bookingId.value,
             tickets: tickets,
             price: order.price.value,
             status: order.status.value,
@@ -118,7 +118,7 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
 
         const order = this.reconstituteFromDocument(
             (document.id ?? document._id) as string,
-            document.bookingId,
+            document.bookingId as string,
             tickets,
             document.price,
             document.status,
