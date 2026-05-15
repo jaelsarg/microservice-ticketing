@@ -1,6 +1,9 @@
 import { RouterContext, WebApiController } from '@/Infrastructure/WebApi/Shared/mod.ts';
 import { UseCase } from '@/Application/Ports/mod.ts';
-import { GetOrderByBookingIdInput, GetOrderByBookingIdOutput } from '@/Application/Ticketing/Orders/mod.ts';
+import {
+    GetOrderByBookingIdInput,
+    GetOrderByBookingIdOutput,
+} from '@/Application/Ticketing/Orders/mod.ts';
 
 export class GetOrderByBookingIdController implements WebApiController {
     private readonly _useCase: UseCase<GetOrderByBookingIdInput, GetOrderByBookingIdOutput>;
@@ -31,5 +34,4 @@ export class GetOrderByBookingIdController implements WebApiController {
         ctx.response.status = 200;
         ctx.response.body = order;
     }
-
 }

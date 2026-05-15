@@ -16,7 +16,8 @@ export class OrderByIdNotFoundApplicationException extends NotFoundApplicationEx
     }
 }
 
-export class GetOrderByBookingId implements UseCase<GetOrderByBookingIdInput, GetOrderByBookingIdOutput> {
+export class GetOrderByBookingId
+    implements UseCase<GetOrderByBookingIdInput, GetOrderByBookingIdOutput> {
     private readonly _query: GetOrderByBookingIdQuery;
 
     constructor(query: GetOrderByBookingIdQuery) {

@@ -189,11 +189,11 @@ export class Persistence implements Module {
         serviceCollection.addScoped(
             MongoDbGetOrderByBookingIdQuery.name,
             async (serviceProvider: ServiceProvider) => {
-                const mongoClient = 
-                     (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
+                const mongoClient =
+                    (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
                 return new MongoDbGetOrderByBookingIdQuery(mongoClient);
-            }
-        )
+            },
+        );
 
         serviceCollection.addScoped(
             MongoDbListSuggestionsQuery.name,

@@ -25,7 +25,13 @@ import {
     type WebApiController,
 } from '@/Infrastructure/WebApi/Shared/mod.ts';
 import { IllegalStateException } from '@domaincrafters/std';
-import { AddCustomerToOrder, AddCustomerToOrderInput, GetOrderByBookingId, GetOrderByBookingIdInput, GetOrderByBookingIdOutput } from '@/Application/Ticketing/Orders/mod.ts';
+import {
+    AddCustomerToOrder,
+    AddCustomerToOrderInput,
+    GetOrderByBookingId,
+    GetOrderByBookingIdInput,
+    GetOrderByBookingIdOutput,
+} from '@/Application/Ticketing/Orders/mod.ts';
 
 export class WebApiControllerFactory implements ControllerFactory {
     private readonly _serviceProvider: ServiceProvider;

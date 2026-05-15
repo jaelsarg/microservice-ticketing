@@ -1,4 +1,9 @@
-import { GetOrderByBookingIdQuery, OrderData, CustomerData, TicketData } from '@/Application/Ports/Queries/mod.ts';
+import {
+    CustomerData,
+    GetOrderByBookingIdQuery,
+    OrderData,
+    TicketData,
+} from '@/Application/Ports/Queries/mod.ts';
 import { MongoDbClient } from '@/Infrastructure/Persistence/MongoDb/Shared/mod.ts';
 import { Optional } from '@domaincrafters/std';
 import { Document } from '@mongodb';
@@ -22,7 +27,10 @@ export class MongoDbGetOrderByBookingIdQuery implements GetOrderByBookingIdQuery
     }
 
     async fetch(bookingId: string): Promise<Optional<OrderData>> {
-        const document: Optional<Document> = await this._client.findDocument({ bookingId }, this._collectionName);
+        const document: Optional<Document> = await this._client.findDocument(
+            { bookingId },
+            this._collectionName,
+        );
 
         if (!document.isPresent) {
             return Optional.empty<OrderData>();
@@ -30,12 +38,14 @@ export class MongoDbGetOrderByBookingIdQuery implements GetOrderByBookingIdQuery
 
         const doc = document.value;
 
-        const customerData: CustomerData | null = doc.customer ? {
-            salutation: doc.customer.salutation,
-            firstName: doc.customer.firstName,
-            lastName: doc.customer.lastName,
-            email: doc.customer.email,
-        } : null;
+        const customerData: CustomerData | null = doc.customer
+            ? {
+                salutation: doc.customer.salutation,
+                firstName: doc.customer.firstName,
+                lastName: doc.customer.lastName,
+                email: doc.customer.email,
+            }
+            : null;
 
         const ticketsData: TicketData[] = doc.tickets.map((ticket: TicketDocument) => ({
             id: ticket.id,
@@ -59,5 +69,4 @@ export class MongoDbGetOrderByBookingIdQuery implements GetOrderByBookingIdQuery
 
         return Optional.of<OrderData>(orderData);
     }
-
 }

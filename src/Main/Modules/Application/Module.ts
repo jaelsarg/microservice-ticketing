@@ -11,14 +11,14 @@ import {
 import { domainEventPolicies } from '@/Application/mod.ts';
 import type { Logger, UseCase } from '@/Application/Ports/mod.ts';
 import type {
-GetOrderByBookingIdQuery,
+    GetOrderByBookingIdQuery,
     SuggestionByIdReadModel,
     SuggestionListItemReadModel,
 } from '@/Application/Ports/Queries/mod.ts';
 import { DomainEventRegistry } from '@/Infrastructure/Events/Shared/mod.ts';
 import { PolicyDomainEventListener } from '@/Infrastructure/Events/mod.ts';
 import {
-MongoDbGetOrderByBookingIdQuery,
+    MongoDbGetOrderByBookingIdQuery,
     MongoDbGetSuggestionByIdQuery,
     MongoDbListSuggestionsQuery,
 } from '@/Infrastructure/Persistence/MongoDb/Queries/mod.ts';
@@ -102,14 +102,14 @@ export class Application implements Module {
 
         serviceCollection.addScoped(
             GetOrderByBookingId.name,
-            async (serviceProvider: ServiceProvider) => {                
+            async (serviceProvider: ServiceProvider) => {
                 const query = (await serviceProvider.getService<GetOrderByBookingIdQuery>(
                     MongoDbGetOrderByBookingIdQuery.name,
                 )).getOrThrow();
 
                 return new GetOrderByBookingId(query);
-            }
-        )
+            },
+        );
 
         // Suggestions
         serviceCollection.addScoped(
