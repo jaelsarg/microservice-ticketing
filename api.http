@@ -1,6 +1,7 @@
 @baseUrl = http://localhost:8000
 @suggestionId = 8fdd8b8e-8de4-4b9a-8e16-868b72f4f469
 @orderId = e00fedce-47f5-410e-9265-c6b3cea96228
+@bookingId = 03226496-5d7a-4f5c-86c4-db065408f6a7
 
 ### Add customer to order
 POST {{baseUrl}}/api/orders/{{orderId}}/customer
@@ -14,6 +15,10 @@ Accept: application/json
     "email": "john.doe@example.com",
     "agreeToTerms": true
 }
+
+### Get order by booking id
+GET {{baseUrl}}/api/orders/{{bookingId}}
+Accept: application/json
 
 ### Create suggestion
 POST {{baseUrl}}/api/suggestions
