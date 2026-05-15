@@ -1,6 +1,7 @@
 import {
     AddCustomerToOrderController,
     CreateSuggestionController,
+    GetOrderByBookingIdController,
     GetSuggestionByIdController,
     ListSuggestionsController,
 } from '@/Infrastructure/WebApi/Controllers/mod.ts';
@@ -10,6 +11,7 @@ export class WebApiRoutes implements Routes {
     map(routerBuilder: RouterBuilder): Router {
         return routerBuilder
             .mapPost(AddCustomerToOrderController.name, '/api/orders/:orderId/customer')
+            .mapGet(GetOrderByBookingIdController.name, '/api/orders/:bookingId')
             // Suggestions
             .mapGet(ListSuggestionsController.name, '/api/suggestions')
             .mapPost(CreateSuggestionController.name, '/api/suggestions')
