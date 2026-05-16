@@ -34,6 +34,7 @@ import {
     CreateOrderFromBookingInput,
     GetOrderByBookingId,
 } from '@/Application/Ticketing/Orders/mod.ts';
+import { PayOrder } from '@/Application/Ticketing/Payments/mod.ts';
 
 export class Application implements Module {
     add(serviceCollection: ServiceCollection, _config: Config): void {
@@ -108,6 +109,22 @@ export class Application implements Module {
                 )).getOrThrow();
 
                 return new GetOrderByBookingId(query);
+            },
+        );
+
+        serviceCollection.addScoped(
+            PayOrder.name,
+            async (serviceProvider: ServiceProvider) => {
+                const uow =
+                    (await serviceProvider.getService<MongoDbUnitOfWork>(MongoDbUnitOfWork.name))
+                        .getOrThrow();
+                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name))
+                    .getOrThrow();
+                const paymentService = (await serviceProvider.getService<OnlinePaymentService>(
+                    OnlinePaymentService.name,
+                )).getOrThrow();
+
+                return new PayOrder(uow, logger, paymentService);
             },
         );
 
