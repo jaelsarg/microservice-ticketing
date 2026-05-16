@@ -32,6 +32,8 @@ import {
     GetOrderByBookingIdInput,
     GetOrderByBookingIdOutput,
 } from '@/Application/Ticketing/Orders/mod.ts';
+import { PayOrderController } from '@/Infrastructure/WebApi/Controllers/PayOrderController.ts';
+import { PayOrder, PayOrderInput } from '@/Application/Ticketing/Payments/mod.ts';
 
 export class WebApiControllerFactory implements ControllerFactory {
     private readonly _serviceProvider: ServiceProvider;
@@ -50,6 +52,8 @@ export class WebApiControllerFactory implements ControllerFactory {
                 return await this.createAddCustomerToOrderController();
             case GetOrderByBookingIdController.name:
                 return await this.createGetOrderByBookingIdController();
+            case PayOrderController.name:
+                return await this.createPayOrderController();
 
             // Suggestions
             case CreateSuggestionController.name:
@@ -80,6 +84,14 @@ export class WebApiControllerFactory implements ControllerFactory {
         >(GetOrderByBookingId.name)).getOrThrow();
 
         return new GetOrderByBookingIdController(useCase);
+    }
+
+    private async createPayOrderController(): Promise<PayOrderController> {
+        const useCase = (await this._serviceProvider.getService<
+            UseCase<PayOrderInput, string>
+        >(PayOrder.name)).getOrThrow();
+
+        return new PayOrderController(useCase);
     }
 
     // Suggestions
