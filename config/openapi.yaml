@@ -10,6 +10,10 @@ servers:
       description: Local development server
 
 tags:
+    - name: Orders
+      description: Manage orders for movie tickets
+    - name: Payments
+      description: Process payments for orders
     - name: Suggestions
       description: Create and read suggestions
 
@@ -69,6 +73,42 @@ paths:
                 '500':
                     $ref: '#/components/responses/InternalServerErrorProblem'
 
+    /api/orders/{orderId}/payments:
+        post:
+            tags:
+                - Payments
+            summary: Pay for an order
+            operationId: payForOrder
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PayOrderRequest'
+                        examples:
+                            payForOrder:
+                                value:
+                                    orderId: 123e4567-e89b-12d3-a456-426614174000
+                                    externalId: 123e4567-e89b-12d3-a456-426614174000
+                                    paymentMethod: credit_card
+                                    cardNumber: 4111111111111111
+                                    expiryDate: 12/2025
+                                    cvv: 123
+                                    bookingId: 123e4567-e89b-12d3-a456-426614174000
+                                    amount: 29.99
+            responses:
+                '201':
+                    description: Payment processed
+                    headers:
+                        Location:
+                            $ref: '#/components/headers/Location'
+                '400':
+                    $ref: '#/components/responses/BadRequestProblem'
+                '404':
+                    $ref: '#/components/responses/NotFoundProblem'
+                '500':
+                    $ref: '#/components/responses/InternalServerErrorProblem'
+                    
     /api/suggestions:
         get:
             tags:
@@ -243,6 +283,58 @@ components:
                     type: boolean
                     description: Whether the customer agrees to the terms and conditions
                     example: true
+
+        PayOrderRequest:
+            type: object
+            required:
+                - orderId
+                - externalId
+                - paymentMethod
+                - cardNumber
+                - expiryDate
+                - CVV
+                - bookingId
+                - amount
+            properties:
+                orderId:
+                    type: string
+                    format: uuid
+                    description: Order identifier
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                externalId:
+                    type: string
+                    format: uuid
+                    description: External identifier
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                paymentMethod:
+                    type: string
+                    description: Method of payment
+                    enum:
+                        - Credit Card
+                        - Bank Transfer
+                    example: Credit Card
+                cardNumber:
+                    type: string
+                    description: Card number
+                    example: 4111111111111111
+                expiryDate:
+                    type: string
+                    description: Card expiry date
+                    example: 12/2025
+                cvv:
+                    type: string
+                    description: Card CVV code
+                    example: 123
+                bookingId:
+                    type: string
+                    format: uuid
+                    description: Booking identifier
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                amount:
+                    type: number
+                    description: Payment amount
+                    example: 29.99
+
         CreateSuggestionRequest:
             type: object
             required:
