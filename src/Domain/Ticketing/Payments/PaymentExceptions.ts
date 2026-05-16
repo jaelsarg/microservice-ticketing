@@ -1,9 +1,3 @@
-// export class InvalidTicketAmountException extends DomainException {
-//     constructor() {
-//         super('Ticket amount must be at least 1.');
-//     }
-// }
-
 // Exceptions for ExternalId (Value Object)
 import { DomainException } from '@/Domain/Shared/mod.ts';
 
