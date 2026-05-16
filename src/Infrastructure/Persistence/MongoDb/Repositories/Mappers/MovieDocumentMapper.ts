@@ -18,7 +18,7 @@ export class MovieDocumentMapper implements DocumentMapper<Movie> {
     // Convert a Movie aggregate to a MongoDB document
     toDocument(movie: Movie): Document {
         const document = serializeObjectToDocument({
-            id: movie.id.toString(),
+            _id: movie.id.toString(),
             title: movie.title.value,
             duration: movie.duration.value,
             genres: movie.genres.map((genre) => genre.value),
@@ -33,7 +33,7 @@ export class MovieDocumentMapper implements DocumentMapper<Movie> {
     // Reconstitute a Movie aggregate from a MongoDB document
     reconstitute(document: Document): Movie {
         const movie = this.reconstituteFromDocument(
-            document.id,
+            (document.id ?? document._id) as string,
             document.title,
             document.duration,
             document.genres,
