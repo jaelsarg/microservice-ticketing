@@ -1,7 +1,7 @@
 @baseUrl = http://localhost:8000
 @suggestionId = 8fdd8b8e-8de4-4b9a-8e16-868b72f4f469
-@orderId = e00fedce-47f5-410e-9265-c6b3cea96228
-@bookingId = 03226496-5d7a-4f5c-86c4-db065408f6a7
+@orderId = ce6ce7b9-72c2-4f5a-88b7-eb1f923c2609
+@bookingId = d4b9f6a2-7c3e-4a1b-9f2d-5e8c3a7b9f10
 
 ### Add customer to order
 POST {{baseUrl}}/api/orders/{{orderId}}/customer
@@ -30,6 +30,22 @@ Accept: application/json
     "title": "Improve booking performance",
     "description": "Cache frequently requested movie data to reduce latency."
 }
+
+### Pay order
+POST {{baseUrl}}/api/orders/{{orderId}}/payments
+Content-Type: application/json
+Accept: application/json
+
+{
+    "externalId": "e98281ee-60bb-4838-a44f-1cc3f2ddec4a",
+    "paymentMethod": "CREDIT_CARD",
+    "cardNumber": "4111111111111111",
+    "expiryDate": "12/25",
+    "cvv": "123",
+    "bookingId": "{{bookingId}}",
+    "amount": 19.99
+}
+
 
 ### Get all suggestions
 GET {{baseUrl}}/api/suggestions
