@@ -31,5 +31,6 @@ export {
     InvalidStatusTransitionError,
     InvalidTicketAmountException,
     OrderNotFoundException,
+    OrderWithBookingNotFound,
     TermsNotAcceptedException,
 } from './OrderExceptions.ts';
