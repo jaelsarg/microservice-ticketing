@@ -3,6 +3,7 @@ import {
     serializeObjectToDocument,
 } from '@/Infrastructure/Persistence/MongoDb/Shared/mod.ts';
 import {
+    BookingId,
     Customer,
     MovieInfo,
     Order,
@@ -96,7 +97,7 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
             : null;
 
         const document = serializeObjectToDocument({
-            id: order.id.toString(),
+            _id: order.id.toString(),
             bookingId: order.bookingId.value,
             tickets: tickets,
             price: order.price.value,
@@ -141,7 +142,7 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
         const order = Object.create(Order.prototype);
 
         order['_id'] = OrderId.create(id);
-        order['_bookingId'] = OrderId.create(bookingId);
+        order['_bookingId'] = BookingId.create(bookingId);
         order['_tickets'] = tickets;
         order['_price'] = Money.create(price);
         order['_status'] = OrderStatus.create(status as OrderStatusState);
