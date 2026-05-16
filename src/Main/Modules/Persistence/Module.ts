@@ -16,9 +16,11 @@ import {
 import {
     MongoDbMovieRepository,
     MongoDbOrderRepository,
+    MongoDbPaymentRepository,
     MongoDbSuggestionRepository,
     MovieDocumentMapper,
     OrderDocumentMapper,
+    PaymentDocumentMapper,
     SuggestionDocumentMapper,
 } from '@/Infrastructure/Persistence/MongoDb/Repositories/mod.ts';
 import {
@@ -108,6 +110,11 @@ export class Persistence implements Module {
                     MongoDbOrderRepository.name,
                 )).getOrThrow();
 
+                const paymentRepository =
+                    (await serviceProvider.getService<MongoDbPaymentRepository>(
+                        MongoDbPaymentRepository.name,
+                    )).getOrThrow();
+
                 // Suggestions
                 const suggestionRepository = (await serviceProvider.getService<
                     MongoDbSuggestionRepository
@@ -118,6 +125,7 @@ export class Persistence implements Module {
                 const unitOfWork = new MongoDbUnitOfWork(mongoClient.session);
                 unitOfWork.registerRepository(movieRepository);
                 unitOfWork.registerRepository(orderRepository);
+                unitOfWork.registerRepository(paymentRepository);
 
                 // Suggestions
                 unitOfWork.registerRepository(suggestionRepository);
@@ -156,6 +164,17 @@ export class Persistence implements Module {
                 const mapper = new OrderDocumentMapper();
 
                 return new MongoDbOrderRepository(mongoClient, mapper);
+            },
+        );
+
+        serviceCollection.addScoped(
+            MongoDbPaymentRepository.name,
+            async (serviceProvider: ServiceProvider) => {
+                const mongoClient =
+                    (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
+                const mapper = new PaymentDocumentMapper();
+
+                return new MongoDbPaymentRepository(mongoClient, mapper);
             },
         );
 
