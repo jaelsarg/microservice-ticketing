@@ -52,6 +52,33 @@ channels:
                     routingKey: howestprime.movies.movieevent.bookingopened
 
     # Send channels
+    Howestprime.Ticketing.Payment.PaymentSuccess:
+        address: howestprime.ticketing.payment.paymentsuccess
+        title: Send payment success message
+        messages:
+            PaymentSuccess:
+                $ref: '#/components/messages/PaymentSuccess'
+        bindings:
+            amqp:
+                is: routingKey
+                exchange:
+                    name: howestprime
+                    type: topic
+                    routingKey: howestprime.ticketing.payment.paymentsuccess
+
+    Howestprime.Ticketing.Payment.PaymentFailed:
+        address: howestprime.ticketing.payment.paymentfailed
+        title: Send payment failed message
+        messages:
+            PaymentFailed:
+                $ref: '#/components/messages/PaymentFailed'
+        bindings:
+            amqp:
+                is: routingKey
+                exchange:
+                    name: howestprime
+                    type: topic
+                    routingKey: howestprime.ticketing.payment.paymentfailed
 
     # Suggestions
     thirdparty.service.suggestions.sendcreatesuggestion:
@@ -101,6 +128,21 @@ operations:
             - $ref: '#/channels/Howestprime.Movies.MovieEvent.BookingOpened/messages/BookingOpened'
 
     # Send operations
+    PaymentSuccess:
+        action: send
+        channel:
+            $ref: '#/channels/Howestprime.Ticketing.Payment.PaymentSuccess'
+        description: Publishes a PaymentSuccess message after a successful payment.
+        messages:
+            - $ref: '#/channels/Howestprime.Ticketing.Payment.PaymentSuccess/messages/PaymentSuccess'
+
+    PaymentFailed:
+        action: send
+        channel:
+            $ref: '#/channels/Howestprime.Ticketing.Payment.PaymentFailed'
+        description: Publishes a PaymentFailed message after a failed payment.
+        messages:
+            - $ref: '#/channels/Howestprime.Ticketing.Payment.PaymentFailed/messages/PaymentFailed'
 
     # Suggestions
     WhenSuggestionSendCreateSuggestion:
@@ -137,6 +179,18 @@ components:
             summary: Indicates that booking has been opened for a movie
             payload:
                 $ref: '#/components/schemas/BookingOpenedPayload'
+        PaymentSuccess:
+            name: PaymentSuccess
+            title: Payment success
+            summary: Indicates that a payment has been processed successfully.
+            payload:
+                $ref: '#/components/schemas/PaymentSuccessPayload'
+        PaymentFailed:
+            name: PaymentFailed
+            title: Payment failed
+            summary: Indicates that a payment has failed.
+            payload:
+                $ref: '#/components/schemas/PaymentFailedPayload'
 
         # Suggestion
         SuggestionSendCreateSuggestion:
@@ -215,6 +269,41 @@ components:
                     type: array
                     items:
                         type: integer
+        PaymentSuccessPayload:
+            type: object
+            required:
+                - paymentId
+                - orderId
+                - bookingId
+            properties:
+                paymentId:
+                    type: string
+                    format: uuid
+                orderId:
+                    type: string
+                    format: uuid
+                bookingId:
+                    type: string
+                    format: uuid
+        PaymentFailedPayload:
+            type: object
+            required:
+                - paymentId
+                - orderId
+                - bookingId
+                - reason
+            properties:
+                paymentId:
+                    type: string
+                    format: uuid
+                orderId:
+                    type: string
+                    format: uuid
+                bookingId:
+                    type: string
+                    format: uuid
+                reason:
+                    type: string
 
         # Suggestions
         SuggestionSendCreateSuggestionPayload:
