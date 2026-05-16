@@ -73,3 +73,9 @@ export class OrderNotFoundException extends DomainException {
         super(`Order with ID "${orderId}" not found.`);
     }
 }
+
+export class OrderWithBookingNotFound extends DomainException {
+    constructor(orderId: string, bookingId: string) {
+        super(`There is no order with ID "${orderId}" that has a booking with ID "${bookingId}".`);
+    }
+}
