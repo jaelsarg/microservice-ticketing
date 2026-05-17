@@ -33,8 +33,12 @@ import {
     CreateOrderFromBooking,
     CreateOrderFromBookingInput,
     GetOrderByBookingId,
+    MarkOrderAsPaid,
 } from '@/Application/Ticketing/Orders/mod.ts';
-import { PayOrder } from '@/Application/Ticketing/Payments/mod.ts';
+import {
+    PayOrder,
+    WhenPaymentSucceededThenMarkOrderAsPaid,
+} from '@/Application/Ticketing/Payments/mod.ts';
 
 export class Application implements Module {
     add(serviceCollection: ServiceCollection, _config: Config): void {
@@ -128,6 +132,19 @@ export class Application implements Module {
             },
         );
 
+        serviceCollection.addScoped(
+            MarkOrderAsPaid.name,
+            async (serviceProvider: ServiceProvider) => {
+                const uow =
+                    (await serviceProvider.getService<MongoDbUnitOfWork>(MongoDbUnitOfWork.name))
+                        .getOrThrow();
+                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name))
+                    .getOrThrow();
+
+                return new MarkOrderAsPaid(uow, logger);
+            },
+        );
+
         // Suggestions
         serviceCollection.addScoped(
             CreateSuggestionUseCase.name,
@@ -193,6 +210,19 @@ export class Application implements Module {
     }
 
     private addPolicies(serviceCollection: ServiceCollection): void {
+        serviceCollection.addScoped(
+            WhenPaymentSucceededThenMarkOrderAsPaid.name,
+            async (serviceProvider: ServiceProvider) => {
+                const useCase =
+                    (await serviceProvider.getService<MarkOrderAsPaid>(MarkOrderAsPaid.name))
+                        .getOrThrow();
+
+                const policy = new WhenPaymentSucceededThenMarkOrderAsPaid(useCase);
+
+                return policy;
+            },
+        );
+
         serviceCollection.addScoped(
             WhenSuggestionCreatedConsoleLogSuggestion.name,
             async (serviceProvider: ServiceProvider) => {
