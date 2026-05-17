@@ -5,6 +5,7 @@ import {
     Customer,
     InvalidOrderStatusException,
     InvalidTicketAmountException,
+    OrderPaid,
     OrderStatus,
     TermsNotAcceptedException,
     Ticket,
@@ -127,6 +128,13 @@ export class Order extends AggregateRoot<OrderId> {
         }
 
         this._status = this._status.transitionTo(OrderStatus.Paid);
+
+        this.raise(
+            OrderPaid.create(
+                this.id.value,
+                this.bookingId.value,
+            ),
+        );
     }
 
     releaseTickets(): void {
