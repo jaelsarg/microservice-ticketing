@@ -11,3 +11,5 @@ export {
     type GetOrderByBookingIdOutput,
     OrderByIdNotFoundApplicationException,
 } from './GetOrderByBookingId.ts';
+
+export { MarkOrderAsPaid, type MarkOrderAsPaidInput } from './MarkOrderAsPaid.ts';
