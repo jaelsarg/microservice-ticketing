@@ -13,3 +13,7 @@ export {
 } from './GetOrderByBookingId.ts';
 
 export { MarkOrderAsPaid, type MarkOrderAsPaidInput } from './MarkOrderAsPaid.ts';
+
+export { ReleaseTickets, type ReleaseTicketsInput } from './ReleaseTickets.ts';
+
+export { WhenOrderPaidThenReleaseTickets } from './WhenOrderPaidThenReleaseTickets.ts';
