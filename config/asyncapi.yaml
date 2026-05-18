@@ -80,6 +80,20 @@ channels:
                     type: topic
                     routingKey: howestprime.ticketing.payment.paymentfailed
 
+    Howestprime.Ticketing.Payment.TicketsReleased:
+        address: howestprime.ticketing.payment.ticketsreleased
+        title: Send tickets released message
+        messages:
+            TicketsReleased:
+                $ref: '#/components/messages/TicketsReleased'
+        bindings:
+            amqp:
+                is: routingKey
+                exchange:
+                    name: howestprime
+                    type: topic
+                    routingKey: howestprime.ticketing.payment.ticketsreleased
+
     # Suggestions
     thirdparty.service.suggestions.sendcreatesuggestion:
         address: thirdparty.service.suggestions.sendcreatesuggestion
@@ -143,6 +157,14 @@ operations:
         description: Publishes a PaymentFailed message after a failed payment.
         messages:
             - $ref: '#/channels/Howestprime.Ticketing.Payment.PaymentFailed/messages/PaymentFailed'
+    
+    TicketsReleased:
+        action: send
+        channel:
+            $ref: '#/channels/Howestprime.Ticketing.Payment.TicketsReleased'
+        description: Publishes a TicketsReleased message after tickets have been released.
+        messages:
+            - $ref: '#/channels/Howestprime.Ticketing.Payment.TicketsReleased/messages/TicketsReleased'
 
     # Suggestions
     WhenSuggestionSendCreateSuggestion:
@@ -191,6 +213,12 @@ components:
             summary: Indicates that a payment has failed.
             payload:
                 $ref: '#/components/schemas/PaymentFailedPayload'
+        TicketsReleased:
+            name: TicketsReleased
+            title: Tickets released
+            summary: Indicates that tickets have been released after a successful payment.
+            payload:
+                $ref: '#/components/schemas/TicketsReleasedPayload'
 
         # Suggestion
         SuggestionSendCreateSuggestion:
@@ -304,6 +332,66 @@ components:
                     format: uuid
                 reason:
                     type: string
+        TicketsReleasedPayload:
+            type: object
+            required:
+                - bookingId
+                - customer
+                - tickets
+            properties:
+                bookingId:
+                    type: string
+                    format: uuid
+                customer:
+                    type: object
+                    required:
+                        - salutation
+                        - firstName
+                        - lastName
+                        - email
+                    properties:
+                        salutation:
+                            type: string
+                            enum: [Mr., Ms., Dr., Prof.]
+                        firstName:
+                            type: string
+                        lastName:
+                            type: string
+                        email:
+                            type: string
+                            format: email
+                tickets:
+                    type: array
+                    items:
+                        type: object
+                        required:
+                            - ticketId
+                            - movieId
+                            - room
+                            - seatNumber
+                            - visitorType
+                            - price
+                            - showtime
+                        properties:
+                            ticketId:
+                                type: string
+                                format: uuid
+                            movieId:
+                                type: string
+                                format: uuid
+                            room:
+                                type: string
+                            seatNumber:
+                                type: integer
+                            visitorType:
+                                type: string
+                                enum: [standard, discounted]
+                            price:
+                                type: number
+                                format: float
+                            showtime:
+                                type: string
+                                format: date-time
 
         # Suggestions
         SuggestionSendCreateSuggestionPayload:
