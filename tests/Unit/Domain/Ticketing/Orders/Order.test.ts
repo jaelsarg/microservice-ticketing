@@ -1,8 +1,9 @@
-import { BookingId, Customer, CustomerEmail, CustomerFirstName, CustomerLastName, CustomerSalutation, CustomerSalutationType, InvalidOrderStatusException, MovieInfo, Order, OrderId, OrderStatus, OrderStatusState, Seat, TermsNotAcceptedException, Ticket, VisitorType } from '@/Domain/Ticketing/Orders/mod.ts';
+import { BookingId, Customer, CustomerEmail, CustomerFirstName, CustomerLastName, CustomerSalutation, CustomerSalutationType, InvalidOrderStatusException, MovieInfo, Order, OrderId, OrderPaid, OrderStatus, OrderStatusState, Seat, TermsNotAcceptedException, Ticket, TicketsReleased, VisitorType } from '@/Domain/Ticketing/Orders/mod.ts';
 import { AgeRating, Genre, Money, MovieDuration, MovieId, MovieTitle, PosterUrl } from '@/Domain/Ticketing/Movies/mod.ts';
 import { assertEquals, assertThrows } from '@std/assert';
 import { InvalidTicketAmountException } from '@/Domain/Ticketing/Orders/OrderExceptions.ts';
 import { VisitorTypeState } from '@/Domain/Ticketing/Orders/ValueObjects/VisitorType.ts';
+import { DomainEvent } from '@/Domain/Shared/mod.ts';
 
 const createTickets = () =>
   [
@@ -19,6 +20,15 @@ const createTickets = () =>
         new Date('2026-05-15T19:00:00Z')
     )
   ]
+
+function expectSingleEvent<TEvent>(
+    events: readonly DomainEvent[],
+    ctor: { prototype: TEvent },
+) {
+    assertEquals(events.length, 1);
+    assertEquals(events[0] instanceof (ctor as any), true);
+    return events[0] as TEvent;
+}
 
 Deno.test('[Unit] - Order - create - valid input - returns aggregate with value objects', () => {
     // Arrange
@@ -133,6 +143,7 @@ Deno.test('[Unit] - Order - markAsPaid - valid - set status to Paid', () => {
 
     // Assert
     assertEquals(order.status.value, OrderStatusState.Paid);
+    expectSingleEvent(order.domainEvents, OrderPaid);
 });
 
 Deno.test('[Unit] - Order - markAsPaid - invalid status - should throw InvalidOrderStatusException', () => {
@@ -176,6 +187,8 @@ Deno.test('[Unit] - Order - releaseTickets - valid - set status to Released', ()
 
     // Assert
     assertEquals(order.status, OrderStatus.TicketReleased);
+
+    expectSingleEvent(order.domainEvents, TicketsReleased);
 });
 
 Deno.test('[Unit] - Order - releaseTickets - invalid status - should throw InvalidOrderStatusException', () => {
