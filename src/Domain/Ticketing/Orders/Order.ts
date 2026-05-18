@@ -9,6 +9,7 @@ import {
     OrderStatus,
     TermsNotAcceptedException,
     Ticket,
+    TicketsReleased,
 } from '@/Domain/Ticketing/Orders/mod.ts';
 import { Optional } from '@domaincrafters/std';
 
@@ -143,6 +144,59 @@ export class Order extends AggregateRoot<OrderId> {
         }
 
         this._status = this._status.transitionTo(OrderStatus.TicketReleased);
+
+        const customer = this.collectCustomerDetails();
+        const tickets = this.collectTicketDetails();
+
+        this.raise(
+            TicketsReleased.create(
+                this.id.value,
+                customer,
+                tickets,
+            ),
+        );
+    }
+
+    private collectCustomerDetails(): {
+        salutation: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+    } | null {
+        if (!this._customer.isPresent) {
+            return null;
+        }
+
+        const customer = this._customer.value;
+
+        return {
+            salutation: customer.salutation.value,
+            firstName: customer.firstName.value,
+            lastName: customer.lastName.value,
+            email: customer.email.value,
+        };
+    }
+
+    private collectTicketDetails(): {
+        ticketId: string;
+        movieId: string;
+        room: string;
+        seatNumber: number;
+        visitorType: string;
+        price: number;
+        showtime: Date;
+    }[] {
+        return this.tickets.map((ticket) => {
+            return {
+                ticketId: ticket.id.value,
+                movieId: ticket.movieInfo.movieId.value,
+                room: ticket.room,
+                seatNumber: ticket.seat.seatNumber,
+                visitorType: ticket.seat.visitorType.value,
+                price: ticket.price.value,
+                showtime: ticket.showTime,
+            };
+        });
     }
 
     cancel(): void {
