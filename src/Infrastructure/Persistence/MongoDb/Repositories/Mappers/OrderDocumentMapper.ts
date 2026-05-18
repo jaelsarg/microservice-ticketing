@@ -5,6 +5,11 @@ import {
 import {
     BookingId,
     Customer,
+    CustomerEmail,
+    CustomerFirstName,
+    CustomerLastName,
+    CustomerSalutation,
+    CustomerSalutationType,
     MovieInfo,
     Order,
     OrderId,
@@ -26,6 +31,7 @@ import {
     MovieTitle,
     PosterUrl,
 } from '@/Domain/Ticketing/Movies/mod.ts';
+import { Optional } from '@domaincrafters/std';
 
 type TicketDocument = {
     id: string;
@@ -147,7 +153,9 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
         order['_price'] = Money.create(price);
         order['_status'] = OrderStatus.create(status as OrderStatusState);
         order['_agreeToTerms'] = agreeToTerms;
-        order['_customer'] = customer;
+        order['_customer'] = customer
+            ? Optional.of<Customer>(customer)
+            : Optional.empty<Customer>();
 
         order['_domainEvents'] = [];
 
@@ -193,10 +201,12 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
     private reconstituteCustomer(customerDoc: CustomerDocument) {
         const customer = Object.create(Customer.prototype);
 
-        customer['_salutation'] = customerDoc.salutation;
-        customer['_firstName'] = customerDoc.firstName;
-        customer['_lastName'] = customerDoc.lastName;
-        customer['_email'] = customerDoc.email;
+        customer['_salutation'] = CustomerSalutation.create(
+            customerDoc.salutation as CustomerSalutationType,
+        );
+        customer['_firstName'] = CustomerFirstName.create(customerDoc.firstName);
+        customer['_lastName'] = CustomerLastName.create(customerDoc.lastName);
+        customer['_email'] = CustomerEmail.create(customerDoc.email);
 
         return customer;
     }
