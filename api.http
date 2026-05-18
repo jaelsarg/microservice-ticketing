@@ -1,7 +1,6 @@
 @baseUrl = http://localhost:8000
-@suggestionId = 8fdd8b8e-8de4-4b9a-8e16-868b72f4f469
-@orderId = ce6ce7b9-72c2-4f5a-88b7-eb1f923c2609
-@bookingId = d4b9f6a2-7c3e-4a1b-9f2d-5e8c3a7b9f10
+@orderId = 0ce54cb4-07cd-4bb1-9308-c9955f0d970e
+@bookingId = 2e77112b-5459-4079-88e7-ad2484143c79
 
 ### Add customer to order
 POST {{baseUrl}}/api/orders/{{orderId}}/customer
@@ -20,17 +19,6 @@ Accept: application/json
 GET {{baseUrl}}/api/orders/{{bookingId}}
 Accept: application/json
 
-### Create suggestion
-POST {{baseUrl}}/api/suggestions
-Content-Type: application/json
-Accept: application/json
-
-{
-    "email": "user3@example.com",
-    "title": "Improve booking performance",
-    "description": "Cache frequently requested movie data to reduce latency."
-}
-
 ### Pay order
 POST {{baseUrl}}/api/orders/{{orderId}}/payments
 Content-Type: application/json
@@ -45,12 +33,3 @@ Accept: application/json
     "bookingId": "{{bookingId}}",
     "amount": 19.99
 }
-
-
-### Get all suggestions
-GET {{baseUrl}}/api/suggestions
-Accept: application/json
-
-### Get suggestion by id
-GET {{baseUrl}}/api/suggestions/{{suggestionId}}
-Accept: application/json
