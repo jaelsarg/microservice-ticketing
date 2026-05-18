@@ -34,6 +34,8 @@ import {
     CreateOrderFromBookingInput,
     GetOrderByBookingId,
     MarkOrderAsPaid,
+    ReleaseTickets,
+    WhenOrderPaidThenReleaseTickets,
 } from '@/Application/Ticketing/Orders/mod.ts';
 import {
     PayOrder,
@@ -145,6 +147,19 @@ export class Application implements Module {
             },
         );
 
+        serviceCollection.addScoped(
+            ReleaseTickets.name,
+            async (serviceProvider: ServiceProvider) => {
+                const uow =
+                    (await serviceProvider.getService<MongoDbUnitOfWork>(MongoDbUnitOfWork.name))
+                        .getOrThrow();
+                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name))
+                    .getOrThrow();
+
+                return new ReleaseTickets(uow, logger);
+            },
+        );
+
         // Suggestions
         serviceCollection.addScoped(
             CreateSuggestionUseCase.name,
@@ -218,6 +233,19 @@ export class Application implements Module {
                         .getOrThrow();
 
                 const policy = new WhenPaymentSucceededThenMarkOrderAsPaid(useCase);
+
+                return policy;
+            },
+        );
+
+        serviceCollection.addScoped(
+            WhenOrderPaidThenReleaseTickets.name,
+            async (serviceProvider: ServiceProvider) => {
+                const useCase =
+                    (await serviceProvider.getService<ReleaseTickets>(ReleaseTickets.name))
+                        .getOrThrow();
+
+                const policy = new WhenOrderPaidThenReleaseTickets(useCase);
 
                 return policy;
             },
