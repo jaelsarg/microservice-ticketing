@@ -36,7 +36,7 @@ export class MarkOrderAsPaid implements UseCase<MarkOrderAsPaidInput, void> {
                 orderId: order.id.value,
             });
 
-            await orderRepo.save(order);
+            await this._uow.save(order);
         });
     }
 }
