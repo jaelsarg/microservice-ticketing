@@ -10,12 +10,26 @@ import { Document } from '@mongodb';
 
 interface TicketDocument {
     id: string;
-    seatNumber: number;
-    visitorType: string;
+    seat: SeatDocument;
     price: number;
-    movieId: string;
+    movieInfo: MovieInfoDocument;
     room: string;
     showTime: string | Date;
+}
+
+interface SeatDocument {
+    seatNumber: number;
+    visitorType: string;
+}
+
+interface MovieInfoDocument {
+    id: string;
+    title: string;
+    duration: number;
+    genres: string[];
+    posterUrl: string;
+    ageRating: number;
+    price: number;
 }
 
 export class MongoDbGetOrderByBookingIdQuery implements GetOrderByBookingIdQuery {
@@ -49,10 +63,10 @@ export class MongoDbGetOrderByBookingIdQuery implements GetOrderByBookingIdQuery
 
         const ticketsData: TicketData[] = doc.tickets.map((ticket: TicketDocument) => ({
             id: ticket.id,
-            seatNumber: ticket.seatNumber,
-            visitorType: ticket.visitorType,
+            seatNumber: ticket.seat.seatNumber,
+            visitorType: ticket.seat.visitorType,
             price: ticket.price,
-            movieId: ticket.movieId,
+            movieId: ticket.movieInfo.id,
             room: ticket.room,
             showTime: new Date(ticket.showTime),
         }));
