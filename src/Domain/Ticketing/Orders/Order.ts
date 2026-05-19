@@ -3,6 +3,7 @@ import { Money } from '@/Domain/Ticketing/Movies/mod.ts';
 import {
     BookingId,
     Customer,
+    CustomerInfoAdded,
     InvalidOrderStatusException,
     InvalidTicketAmountException,
     OrderPaid,
@@ -117,6 +118,15 @@ export class Order extends AggregateRoot<OrderId> {
         }
 
         this._customer = Optional.of<Customer>(customer);
+
+        this.raise(
+            CustomerInfoAdded.create(
+                customer.salutation.value,
+                customer.firstName.value,
+                customer.lastName.value,
+                customer.email.value,
+            ),
+        );
     }
 
     markAsPaid(): void {

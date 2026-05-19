@@ -93,6 +93,20 @@ channels:
                     name: howestprime
                     type: topic
                     routingKey: howestprime.ticketing.payment.ticketsreleased
+    
+    Howestprime.Ticketing.Payment.CustomerInfoAdded:
+        address: howestprime.ticketing.payment.customerinfoadded
+        title: Send customer info added message
+        messages:
+            CustomerInfoAdded:
+                $ref: '#/components/messages/CustomerInfoAdded'
+        bindings:
+            amqp:
+                is: routingKey
+                exchange:
+                    name: howestprime
+                    type: topic
+                    routingKey: howestprime.ticketing.payment.customerinfoadded
 
     # Suggestions
     thirdparty.service.suggestions.sendcreatesuggestion:
@@ -165,6 +179,14 @@ operations:
         description: Publishes a TicketsReleased message after tickets have been released.
         messages:
             - $ref: '#/channels/Howestprime.Ticketing.Payment.TicketsReleased/messages/TicketsReleased'
+    
+    CustomerInfoAdded:
+        action: send
+        channel:
+            $ref: '#/channels/Howestprime.Ticketing.Payment.CustomerInfoAdded'
+        description: Published a CustomerInfoAdded message
+        messages:
+            - $ref: '#/channels/Howestprime.Ticketing.Payment.CustomerInfoAdded/messages/CustomerInfoAdded'
 
     # Suggestions
     WhenSuggestionSendCreateSuggestion:
@@ -219,6 +241,12 @@ components:
             summary: Indicates that tickets have been released after a successful payment.
             payload:
                 $ref: '#/components/schemas/TicketsReleasedPayload'
+        CustomerInfoAdded:
+            name: CustomerInfoAdded
+            title: Customer info added
+            summary: Indicates that customer info has been added
+            payload:
+                $ref: '#/components/schemas/CustomerInfoAddedPayload'
 
         # Suggestion
         SuggestionSendCreateSuggestion:
@@ -392,6 +420,24 @@ components:
                             showtime:
                                 type: string
                                 format: date-time
+        CustomerInfoAddedPayload:
+            type: object
+            required:
+                - salutation
+                - firstName
+                - lastName
+                - email
+            properties:
+                salutation:
+                    type: string
+                    enum: [Mr., Ms., Dr., Prof.]
+                firstName:
+                    type: string
+                lastName:
+                    type: string
+                email:
+                    type: string
+                    format: email
 
         # Suggestions
         SuggestionSendCreateSuggestionPayload:
