@@ -181,6 +181,7 @@ Deno.test('[Unit] - Order - releaseTickets - valid - set status to Released', ()
     const order = Order.create(bookingId, tickets);
     order.acceptTerms(true);
     order.markAsPaid();
+    order.pullDomainEvents();
 
     // Act
     order.releaseTickets();
@@ -188,7 +189,37 @@ Deno.test('[Unit] - Order - releaseTickets - valid - set status to Released', ()
     // Assert
     assertEquals(order.status, OrderStatus.TicketReleased);
 
-    expectSingleEvent(order.domainEvents, TicketsReleased);
+    expectSingleEvent(order.pullDomainEvents(), TicketsReleased);
+});
+
+Deno.test('[Unit] - Order - releaseTickets - valid with customer - emits customer details', () => {
+    // Arrange
+    const bookingId = BookingId.create('bf65cb30-15b0-4e78-aebd-8a38f08940d7');
+    const tickets = createTickets();
+    const order = Order.create(bookingId, tickets);
+    const customer = Customer.create(
+        CustomerSalutation.create(CustomerSalutationType.Mr),
+        CustomerFirstName.create('John'),
+        CustomerLastName.create('Doe'),
+        CustomerEmail.create('john.doe@email.com'),
+    );
+
+    order.acceptTerms(true);
+    order.addCustomer(true, customer);
+    order.markAsPaid();
+    order.pullDomainEvents();
+
+    // Act
+    order.releaseTickets();
+
+    // Assert
+    const event = expectSingleEvent(order.pullDomainEvents(), TicketsReleased);
+    assertEquals(event.customer, {
+        salutation: 'Mr.',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@email.com',
+    });
 });
 
 Deno.test('[Unit] - Order - releaseTickets - invalid status - should throw InvalidOrderStatusException', () => {

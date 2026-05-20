@@ -54,13 +54,13 @@ Deno.test('[Unit] - GetOrderByBookingId - valid input - returns order', async ()
     const result = await useCase.execute(input);
 
     // Assert
-    assertEquals(result.data.id, data.id);
-    assertEquals(result.data.bookingId, data.bookingId);
-    assertEquals(result.data.status, data.status);
-    assertEquals(result.data.price, data.price);
-    assertEquals(result.data.agreeToTerms, data.agreeToTerms);
-    assertEquals(result.data.customer, data.customer);
-    assertEquals(result.data.tickets, data.tickets);
+    assertEquals(result.id, data.id);
+    assertEquals(result.bookingId, data.bookingId);
+    assertEquals(result.status, data.status);
+    assertEquals(result.price, data.price);
+    assertEquals(result.agreeToTerms, data.agreeToTerms);
+    assertEquals(result.customer, data.customer);
+    assertEquals(result.tickets, data.tickets);
 });
 
 Deno.test('[Unit] - GetOrderByBookingId - non-existent booking ID - throws exception', async () => {
