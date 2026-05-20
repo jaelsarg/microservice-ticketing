@@ -30,8 +30,8 @@ export class TicketsReleased extends OrderDomainEvent {
 
     private constructor(
         orderId: string,
-        customer: CustomerDetail | null,
         tickets: TicketDetail[],
+        customer: CustomerDetail | null,
     ) {
         super();
         this._orderId = orderId;
@@ -42,10 +42,10 @@ export class TicketsReleased extends OrderDomainEvent {
 
     static create(
         orderId: string,
-        customer: CustomerDetail | null,
         tickets: TicketDetail[],
+        customer?: CustomerDetail | null,
     ): TicketsReleased {
-        return new TicketsReleased(orderId, customer, tickets);
+        return new TicketsReleased(orderId, tickets, customer ?? null);
     }
 
     override get FQDN(): EventFQDN {
