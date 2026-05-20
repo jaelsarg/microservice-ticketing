@@ -8,7 +8,6 @@ export { AddCustomerToOrder, type AddCustomerToOrderInput } from './AddCustomerT
 export {
     GetOrderByBookingId,
     type GetOrderByBookingIdInput,
-    type GetOrderByBookingIdOutput,
     OrderByIdNotFoundApplicationException,
 } from './GetOrderByBookingId.ts';
 
