@@ -30,6 +30,7 @@ import { SaveMovie, SaveMovieInput } from '@/Application/Ticketing/Movies/mod.ts
 import {
     AddCustomerToOrder,
     AddCustomerToOrderInput,
+    CancelOrder,
     CreateOrderFromBooking,
     CreateOrderFromBookingInput,
     GetOrderByBookingId,
@@ -39,6 +40,7 @@ import {
 } from '@/Application/Ticketing/Orders/mod.ts';
 import {
     PayOrder,
+    WhenPaymentFailedThenCancelOrder,
     WhenPaymentSucceededThenMarkOrderAsPaid,
 } from '@/Application/Ticketing/Payments/mod.ts';
 
@@ -160,6 +162,19 @@ export class Application implements Module {
             },
         );
 
+        serviceCollection.addScoped(
+            CancelOrder.name,
+            async (serviceProvider: ServiceProvider) => {
+                const uow =
+                    (await serviceProvider.getService<MongoDbUnitOfWork>(MongoDbUnitOfWork.name))
+                        .getOrThrow();
+                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name))
+                    .getOrThrow();
+
+                return new CancelOrder(uow, logger);
+            },
+        );
+
         // Suggestions
         serviceCollection.addScoped(
             CreateSuggestionUseCase.name,
@@ -246,6 +261,19 @@ export class Application implements Module {
                         .getOrThrow();
 
                 const policy = new WhenOrderPaidThenReleaseTickets(useCase);
+
+                return policy;
+            },
+        );
+
+        serviceCollection.addScoped(
+            WhenPaymentFailedThenCancelOrder.name,
+            async (serviceProvider: ServiceProvider) => {
+                const useCase =
+                    (await serviceProvider.getService<CancelOrder>(CancelOrder.name))
+                        .getOrThrow();
+
+                const policy = new WhenPaymentFailedThenCancelOrder(useCase);
 
                 return policy;
             },
