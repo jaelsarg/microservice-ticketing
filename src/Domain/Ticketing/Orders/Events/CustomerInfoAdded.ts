@@ -6,14 +6,22 @@ export class CustomerInfoAdded extends OrderDomainEvent {
         `${OrderDomainEvent.FQDN_PREFIX}.customerinfoadded`,
     );
 
+    private readonly _orderId: string;
     private readonly _salutation: string;
     private readonly _firstName: string;
     private readonly _lastName: string;
     private readonly _email: string;
     private readonly _occurredOn: Date;
 
-    private constructor(salutation: string, firstName: string, lastName: string, email: string) {
+    private constructor(
+        orderId: string,
+        salutation: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+    ) {
         super();
+        this._orderId = orderId;
         this._salutation = salutation;
         this._firstName = firstName;
         this._lastName = lastName;
@@ -21,8 +29,14 @@ export class CustomerInfoAdded extends OrderDomainEvent {
         this._occurredOn = new Date();
     }
 
-    static create(salutation: string, firstName: string, lastName: string, email: string): CustomerInfoAdded {
-        return new CustomerInfoAdded(salutation, firstName, lastName, email);
+    static create(
+        orderId: string,
+        salutation: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+    ): CustomerInfoAdded {
+        return new CustomerInfoAdded(orderId, salutation, firstName, lastName, email);
     }
 
     override get FQDN(): EventFQDN {
@@ -31,6 +45,10 @@ export class CustomerInfoAdded extends OrderDomainEvent {
 
     override get occurredOn(): Date {
         return this._occurredOn;
+    }
+
+    get orderId(): string {
+        return this._orderId;
     }
 
     get salutation(): string {

@@ -121,6 +121,7 @@ export class Order extends AggregateRoot<OrderId> {
 
         this.raise(
             CustomerInfoAdded.create(
+                this.id.value,
                 customer.salutation.value,
                 customer.firstName.value,
                 customer.lastName.value,
@@ -161,8 +162,8 @@ export class Order extends AggregateRoot<OrderId> {
         this.raise(
             TicketsReleased.create(
                 this.id.value,
-                customer,
                 tickets,
+                customer,
             ),
         );
     }
