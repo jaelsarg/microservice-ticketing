@@ -9,6 +9,7 @@ import {
 } from '@/Application/Ticketing/Suggestions/mod.ts';
 import type { UseCase } from '@/Application/Ports/mod.ts';
 import type {
+    OrderData,
     SuggestionByIdReadModel,
     SuggestionListItemReadModel,
 } from '@/Application/Ports/Queries/mod.ts';
@@ -30,7 +31,6 @@ import {
     AddCustomerToOrderInput,
     GetOrderByBookingId,
     GetOrderByBookingIdInput,
-    GetOrderByBookingIdOutput,
 } from '@/Application/Ticketing/Orders/mod.ts';
 import { PayOrderController } from '@/Infrastructure/WebApi/Controllers/PayOrderController.ts';
 import { PayOrder, PayOrderInput } from '@/Application/Ticketing/Payments/mod.ts';
@@ -80,7 +80,7 @@ export class WebApiControllerFactory implements ControllerFactory {
 
     private async createGetOrderByBookingIdController(): Promise<GetOrderByBookingIdController> {
         const useCase = (await this._serviceProvider.getService<
-            UseCase<GetOrderByBookingIdInput, GetOrderByBookingIdOutput>
+            UseCase<GetOrderByBookingIdInput, OrderData>
         >(GetOrderByBookingId.name)).getOrThrow();
 
         return new GetOrderByBookingIdController(useCase);
