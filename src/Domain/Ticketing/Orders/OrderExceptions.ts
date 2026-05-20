@@ -1,4 +1,4 @@
-import { DomainException } from '@/Domain/Shared/mod.ts';
+import { DomainException, NotFoundDomainException } from '@/Domain/Shared/mod.ts';
 
 // Exception thrown when trying to create an Order
 export class InvalidTicketAmountException extends DomainException {
@@ -68,13 +68,13 @@ export class InvalidBookingIdException extends DomainException {
     }
 }
 
-export class OrderNotFoundException extends DomainException {
+export class OrderNotFoundException extends NotFoundDomainException {
     constructor(orderId: string) {
         super(`Order with ID "${orderId}" not found.`);
     }
 }
 
-export class OrderWithBookingNotFound extends DomainException {
+export class OrderWithBookingNotFound extends NotFoundDomainException {
     constructor(orderId: string, bookingId: string) {
         super(`There is no order with ID "${orderId}" that has a booking with ID "${bookingId}".`);
     }
