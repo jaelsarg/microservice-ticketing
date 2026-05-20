@@ -2,13 +2,13 @@ import { RouterContext, WebApiController } from '@/Infrastructure/WebApi/Shared/
 import { UseCase } from '@/Application/Ports/mod.ts';
 import {
     GetOrderByBookingIdInput,
-    GetOrderByBookingIdOutput,
 } from '@/Application/Ticketing/Orders/mod.ts';
+import { OrderData } from '@/Application/Ports/Queries/mod.ts';
 
 export class GetOrderByBookingIdController implements WebApiController {
-    private readonly _useCase: UseCase<GetOrderByBookingIdInput, GetOrderByBookingIdOutput>;
+    private readonly _useCase: UseCase<GetOrderByBookingIdInput, OrderData>;
 
-    constructor(useCase: UseCase<GetOrderByBookingIdInput, GetOrderByBookingIdOutput>) {
+    constructor(useCase: UseCase<GetOrderByBookingIdInput, OrderData>) {
         console.log('GetOrderByBookingIdController instantiated');
         this._useCase = useCase;
     }
