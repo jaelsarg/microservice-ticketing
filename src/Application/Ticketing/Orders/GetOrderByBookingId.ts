@@ -6,10 +6,6 @@ export interface GetOrderByBookingIdInput {
     bookingId: string;
 }
 
-export interface GetOrderByBookingIdOutput {
-    data: OrderData;
-}
-
 export class OrderByIdNotFoundApplicationException extends NotFoundApplicationException {
     constructor(bookingId: string) {
         super(`Order with ID "${bookingId}" was not found.`);
@@ -17,20 +13,20 @@ export class OrderByIdNotFoundApplicationException extends NotFoundApplicationEx
 }
 
 export class GetOrderByBookingId
-    implements UseCase<GetOrderByBookingIdInput, GetOrderByBookingIdOutput> {
+    implements UseCase<GetOrderByBookingIdInput, OrderData> {
     private readonly _query: GetOrderByBookingIdQuery;
 
     constructor(query: GetOrderByBookingIdQuery) {
         this._query = query;
     }
 
-    async execute(input: GetOrderByBookingIdInput): Promise<GetOrderByBookingIdOutput> {
+    async execute(input: GetOrderByBookingIdInput): Promise<OrderData> {
         const orderOptional = await this._query.fetch(input.bookingId);
 
         if (!orderOptional.isPresent) {
             throw new OrderByIdNotFoundApplicationException(input.bookingId);
         }
 
-        return { data: orderOptional.value };
+        return orderOptional.value 
     }
 }
