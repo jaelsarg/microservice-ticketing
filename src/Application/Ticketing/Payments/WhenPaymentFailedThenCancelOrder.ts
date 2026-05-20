@@ -20,5 +20,4 @@ export class WhenPaymentFailedThenCancelOrder implements Policy<PaymentFailed> {
 
         await this._cancelOrder.execute(input);
     }
-
 }

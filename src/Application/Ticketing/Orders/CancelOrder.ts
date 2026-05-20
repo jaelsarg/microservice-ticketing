@@ -39,5 +39,4 @@ export class CancelOrder implements UseCase<CancelOrderInput, void> {
             await this._uow.save(order);
         });
     }
-    
 }

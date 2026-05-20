@@ -1,7 +1,10 @@
 import { WhenSuggestionCreatedConsoleLogSuggestion } from '@/Application/Ticketing/Suggestions/mod.ts';
 import { SuggestionCreatedDomainEvent } from '@/Domain/Ticketing/Suggestions/mod.ts';
 import { PaymentFailed, PaymentSuccess } from '@/Domain/Ticketing/Payments/mod.ts';
-import { WhenPaymentFailedThenCancelOrder, WhenPaymentSucceededThenMarkOrderAsPaid } from '@/Application/Ticketing/Payments/mod.ts';
+import {
+    WhenPaymentFailedThenCancelOrder,
+    WhenPaymentSucceededThenMarkOrderAsPaid,
+} from '@/Application/Ticketing/Payments/mod.ts';
 import { OrderPaid } from '@/Domain/Ticketing/Orders/mod.ts';
 import { WhenOrderPaidThenReleaseTickets } from '@/Application/Ticketing/Orders/mod.ts';
 

@@ -269,9 +269,8 @@ export class Application implements Module {
         serviceCollection.addScoped(
             WhenPaymentFailedThenCancelOrder.name,
             async (serviceProvider: ServiceProvider) => {
-                const useCase =
-                    (await serviceProvider.getService<CancelOrder>(CancelOrder.name))
-                        .getOrThrow();
+                const useCase = (await serviceProvider.getService<CancelOrder>(CancelOrder.name))
+                    .getOrThrow();
 
                 const policy = new WhenPaymentFailedThenCancelOrder(useCase);
 

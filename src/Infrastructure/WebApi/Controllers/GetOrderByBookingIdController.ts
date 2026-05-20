@@ -1,8 +1,6 @@
 import { RouterContext, WebApiController } from '@/Infrastructure/WebApi/Shared/mod.ts';
 import { UseCase } from '@/Application/Ports/mod.ts';
-import {
-    GetOrderByBookingIdInput,
-} from '@/Application/Ticketing/Orders/mod.ts';
+import { GetOrderByBookingIdInput } from '@/Application/Ticketing/Orders/mod.ts';
 import { OrderData } from '@/Application/Ports/Queries/mod.ts';
 
 export class GetOrderByBookingIdController implements WebApiController {
