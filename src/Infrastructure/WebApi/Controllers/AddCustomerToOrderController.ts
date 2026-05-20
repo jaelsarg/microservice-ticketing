@@ -12,16 +12,15 @@ export class AddCustomerToOrderController implements WebApiController {
 
     async handle(ctx: RouterContext<string>): Promise<void> {
         console.log('AddCustomerToOrderController handling request');
-        console.log('Request params:', ctx.params);
-        const orderId = ctx.params.orderId;
+
+        const body = await ctx.request.body.json().catch(() => ({}));
+        const orderId = ctx.params.orderId ?? body.orderId;
 
         if (!orderId) {
             ctx.response.status = 400;
             ctx.response.body = { error: 'Order ID is required' };
             return;
         }
-
-        const body = await ctx.request.body.json().catch(() => ({}));
 
         const input: AddCustomerToOrderInput = {
             orderId: orderId,
