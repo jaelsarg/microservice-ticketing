@@ -1,4 +1,4 @@
-// Aggregate
+// Aggregate Root
 export { Payment, PaymentId } from './Payment.ts';
 
 // Value Objects
@@ -9,9 +9,6 @@ export { ExpiryDate } from './ValueObjects/ExpiryDate.ts';
 export { CVV } from './ValueObjects/CVV.ts';
 export { PaymentAmount } from './ValueObjects/PaymentAmount.ts';
 export { PaymentStatus, PaymentStatusState } from './ValueObjects/PaymentStatus.ts';
-
-// Repository
-export { type PaymentRepository } from './PaymentRepository.ts';
 
 // Exceptions
 export {
@@ -26,6 +23,9 @@ export {
     InvalidPaymentAmountException,
     InvalidPaymentStatusTransitionException,
 } from './PaymentExceptions.ts';
+
+// Repository Interface
+export { type PaymentRepository } from './PaymentRepository.ts';
 
 // Events
 export { PaymentDomainEvent } from './Events/PaymentDomainEvent.ts';

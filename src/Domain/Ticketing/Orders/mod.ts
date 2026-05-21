@@ -1,9 +1,8 @@
-// Aggregate
+// Aggregate Root
 export { Order, OrderId } from './Order.ts';
 
 // Entity
 export { Ticket, TicketId } from './Ticket.ts';
-export { MovieInfo } from '@/Domain/Ticketing/Orders/ValueObjects/MovieInfo.ts';
 
 // Value Objects
 export { BookingId } from './ValueObjects/BookingId.ts';
@@ -15,9 +14,7 @@ export { CustomerEmail } from './ValueObjects/CustomerEmail.ts';
 export { Seat } from './ValueObjects/Seat.ts';
 export { VisitorType, VisitorTypeState } from './ValueObjects/VisitorType.ts';
 export { OrderStatus, OrderStatusState } from './ValueObjects/OrderStatus.ts';
-
-// Repository Interface
-export { type OrderRepository } from './OrderRepository.ts';
+export { MovieInfo } from './ValueObjects/MovieInfo.ts';
 
 // Exceptions
 export {
@@ -34,6 +31,9 @@ export {
     OrderWithBookingNotFound,
     TermsNotAcceptedException,
 } from './OrderExceptions.ts';
+
+// Repository Interface
+export { type OrderRepository } from './OrderRepository.ts';
 
 // Events
 export { OrderDomainEvent } from './Events/OrderDomainEvent.ts';

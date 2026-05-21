@@ -7,6 +7,7 @@ import type {
 import {
     AddCustomerToOrderController,
     GetOrderByBookingIdController,
+    PayOrderController,
 } from '@/Infrastructure/WebApi/Controllers/mod.ts';
 import {
     type ControllerFactory,
@@ -20,7 +21,6 @@ import {
     GetOrderByBookingId,
     GetOrderByBookingIdInput,
 } from '@/Application/Ticketing/Orders/mod.ts';
-import { PayOrderController } from '@/Infrastructure/WebApi/Controllers/PayOrderController.ts';
 import { PayOrder, PayOrderInput } from '@/Application/Ticketing/Payments/mod.ts';
 
 export class WebApiControllerFactory implements ControllerFactory {

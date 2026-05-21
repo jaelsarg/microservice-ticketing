@@ -1,9 +1,9 @@
 import {
     AddCustomerToOrderController,
     GetOrderByBookingIdController,
+    PayOrderController,
 } from '@/Infrastructure/WebApi/Controllers/mod.ts';
 import { type Router, RouterBuilder, type Routes } from '@/Infrastructure/WebApi/Shared/mod.ts';
-import { PayOrderController } from '@/Infrastructure/WebApi/Controllers/PayOrderController.ts';
 
 export class WebApiRoutes implements Routes {
     map(routerBuilder: RouterBuilder): Router {
