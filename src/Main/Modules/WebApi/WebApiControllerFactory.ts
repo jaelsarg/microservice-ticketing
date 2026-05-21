@@ -1,24 +1,12 @@
 import { ServiceProvider } from '@domaincrafters/di';
 
-import {
-    CreateSuggestionUseCase,
-    type CreateSuggestionUseCaseInput,
-    GetSuggestionByIdQueryUseCase,
-    type GetSuggestionByIdQueryUseCaseInput,
-    ListSuggestionsQueryUseCase,
-} from '@/Application/Ticketing/Suggestions/mod.ts';
 import type { UseCase } from '@/Application/Ports/mod.ts';
 import type {
     OrderData,
-    SuggestionByIdReadModel,
-    SuggestionListItemReadModel,
 } from '@/Application/Ports/Queries/mod.ts';
 import {
     AddCustomerToOrderController,
-    CreateSuggestionController,
     GetOrderByBookingIdController,
-    GetSuggestionByIdController,
-    ListSuggestionsController,
 } from '@/Infrastructure/WebApi/Controllers/mod.ts';
 import {
     type ControllerFactory,
@@ -54,15 +42,6 @@ export class WebApiControllerFactory implements ControllerFactory {
                 return await this.createGetOrderByBookingIdController();
             case PayOrderController.name:
                 return await this.createPayOrderController();
-
-            // Suggestions
-            case CreateSuggestionController.name:
-                return await this.createCreateSuggestionController();
-            case ListSuggestionsController.name:
-                return await this.createListSuggestionsController();
-            case GetSuggestionByIdController.name:
-                return await this.createGetSuggestionByIdController();
-
             default:
                 throw new IllegalStateException(
                     `Controller for route ${ctx.routeName} is not defined`,
@@ -92,30 +71,5 @@ export class WebApiControllerFactory implements ControllerFactory {
         >(PayOrder.name)).getOrThrow();
 
         return new PayOrderController(useCase);
-    }
-
-    // Suggestions
-    private async createCreateSuggestionController(): Promise<CreateSuggestionController> {
-        const useCase = (await this._serviceProvider.getService<
-            UseCase<CreateSuggestionUseCaseInput, string>
-        >(CreateSuggestionUseCase.name)).getOrThrow();
-
-        return new CreateSuggestionController(useCase);
-    }
-
-    private async createListSuggestionsController(): Promise<ListSuggestionsController> {
-        const useCase = (await this._serviceProvider.getService<
-            UseCase<void, SuggestionListItemReadModel[]>
-        >(ListSuggestionsQueryUseCase.name)).getOrThrow();
-
-        return new ListSuggestionsController(useCase);
-    }
-
-    private async createGetSuggestionByIdController(): Promise<GetSuggestionByIdController> {
-        const useCase = (await this._serviceProvider.getService<
-            UseCase<GetSuggestionByIdQueryUseCaseInput, SuggestionByIdReadModel>
-        >(GetSuggestionByIdQueryUseCase.name)).getOrThrow();
-
-        return new GetSuggestionByIdController(useCase);
     }
 }

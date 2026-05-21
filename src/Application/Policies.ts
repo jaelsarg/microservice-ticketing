@@ -1,5 +1,3 @@
-import { WhenSuggestionCreatedConsoleLogSuggestion } from '@/Application/Ticketing/Suggestions/mod.ts';
-import { SuggestionCreatedDomainEvent } from '@/Domain/Ticketing/Suggestions/mod.ts';
 import { PaymentFailed, PaymentSuccess } from '@/Domain/Ticketing/Payments/mod.ts';
 import {
     WhenPaymentFailedThenCancelOrder,
@@ -20,9 +18,5 @@ export const domainEventPolicies: Map<string, string[]> = new Map([
     [
         PaymentFailed.FQDN.toString(),
         [WhenPaymentFailedThenCancelOrder.name],
-    ],
-    [
-        SuggestionCreatedDomainEvent.FQDN_VALUE.toString(),
-        [WhenSuggestionCreatedConsoleLogSuggestion.name],
     ],
 ]);

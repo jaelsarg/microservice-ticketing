@@ -108,35 +108,6 @@ channels:
                     type: topic
                     routingKey: howestprime.ticketing.payment.customerinfoadded
 
-    # Suggestions
-    thirdparty.service.suggestions.sendcreatesuggestion:
-        address: thirdparty.service.suggestions.sendcreatesuggestion
-        title: Send create suggestion
-        messages:
-            SuggestionSendCreateSuggestion:
-                $ref: '#/components/messages/SuggestionSendCreateSuggestion'
-        bindings:
-            amqp:
-                is: routingKey
-                exchange:
-                    name: howestprime
-                    type: topic
-                    routingKey: thirdparty.service.suggestions.sendcreatesuggestion
-
-    howestprime.ticketing.suggestions.created:
-        address: howestprime.ticketing.suggestions.created
-        title: Suggestion created
-        messages:
-            SuggestionCreated:
-                $ref: '#/components/messages/SuggestionCreated'
-        bindings:
-            amqp:
-                is: routingKey
-                exchange:
-                    name: howestprime
-                    type: topic
-                    routingKey: howestprime.ticketing.suggestions.created
-
 operations:
     # Receive operations
     WhenMovieRegisteredSaveMovie:
@@ -188,27 +159,6 @@ operations:
         messages:
             - $ref: '#/channels/Howestprime.Ticketing.Payment.CustomerInfoAdded/messages/CustomerInfoAdded'
 
-    # Suggestions
-    WhenSuggestionSendCreateSuggestion:
-        action: receive
-        channel:
-            $ref: '#/channels/thirdparty.service.suggestions.sendcreatesuggestion'
-        description: |
-            Triggered when an external producer requests suggestion creation.
-            Consumes the message and delegates to the CreateSuggestion command use case.
-        messages:
-            - $ref: '#/channels/thirdparty.service.suggestions.sendcreatesuggestion/messages/SuggestionSendCreateSuggestion'
-
-    sendSuggestionCreated:
-        action: send
-        channel:
-            $ref: '#/channels/howestprime.ticketing.suggestions.created'
-        description: |
-            Triggered after a suggestion is created successfully.
-            Publishes the created suggestion payload for downstream consumers.
-        messages:
-            - $ref: '#/channels/howestprime.ticketing.suggestions.created/messages/SuggestionCreated'
-
 components:
     messages:
         MovieRegistered:
@@ -247,21 +197,6 @@ components:
             summary: Indicates that customer info has been added
             payload:
                 $ref: '#/components/schemas/CustomerInfoAddedPayload'
-
-        # Suggestion
-        SuggestionSendCreateSuggestion:
-            name: SuggestionSendCreateSuggestion
-            title: Suggestion create request
-            summary: Request message to create a suggestion.
-            payload:
-                $ref: '#/components/schemas/SuggestionSendCreateSuggestionPayload'
-
-        SuggestionCreated:
-            name: SuggestionCreated
-            title: Suggestion created
-            summary: Event message emitted after a suggestion is created.
-            payload:
-                $ref: '#/components/schemas/SuggestionCreatedPayload'
 
     schemas:
         MovieRegisteredPayload:
@@ -438,68 +373,3 @@ components:
                 email:
                     type: string
                     format: email
-
-        # Suggestions
-        SuggestionSendCreateSuggestionPayload:
-            type: object
-            required:
-                - email
-                - title
-                - description
-            properties:
-                email:
-                    type: string
-                    format: email
-                    maxLength: 254
-                    description: Email address of the suggestion author.
-                    example: user@example.com
-                title:
-                    type: string
-                    minLength: 3
-                    maxLength: 120
-                    description: Short title of the suggestion.
-                    example: Improve booking performance
-                description:
-                    type: string
-                    minLength: 10
-                    maxLength: 2000
-                    description: Detailed suggestion text.
-                    example: Cache frequently requested movie data to reduce latency.
-
-        SuggestionCreatedPayload:
-            type: object
-            required:
-                - suggestionId
-                - email
-                - title
-                - description
-                - occurredOn
-            properties:
-                suggestionId:
-                    type: string
-                    format: uuid
-                    description: Identifier of the created suggestion.
-                    example: 8fdd8b8e-8de4-4b9a-8e16-868b72f4f469
-                email:
-                    type: string
-                    format: email
-                    maxLength: 254
-                    description: Email address of the suggestion author.
-                    example: user@example.com
-                title:
-                    type: string
-                    minLength: 3
-                    maxLength: 120
-                    description: Short title of the suggestion.
-                    example: Improve booking performance
-                description:
-                    type: string
-                    minLength: 10
-                    maxLength: 2000
-                    description: Detailed suggestion text.
-                    example: Cache frequently requested movie data to reduce latency.
-                occurredOn:
-                    type: string
-                    format: date-time
-                    description: UTC timestamp when the event occurred.
-                    example: '2026-03-24T10:15:30.000Z'

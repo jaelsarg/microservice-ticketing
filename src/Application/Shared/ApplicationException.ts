@@ -10,9 +10,3 @@ export class ApplicationException extends Error {
 }
 
 export class NotFoundApplicationException extends ApplicationException {}
-
-export class SuggestionNotFoundApplicationException extends NotFoundApplicationException {
-    constructor(suggestionId: string) {
-        super(`Suggestion with id '${suggestionId}' was not found.`);
-    }
-}

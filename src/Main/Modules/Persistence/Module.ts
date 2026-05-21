@@ -17,16 +17,12 @@ import {
     MongoDbMovieRepository,
     MongoDbOrderRepository,
     MongoDbPaymentRepository,
-    MongoDbSuggestionRepository,
     MovieDocumentMapper,
     OrderDocumentMapper,
     PaymentDocumentMapper,
-    SuggestionDocumentMapper,
 } from '@/Infrastructure/Persistence/MongoDb/Repositories/mod.ts';
 import {
     MongoDbGetOrderByBookingIdQuery,
-    MongoDbGetSuggestionByIdQuery,
-    MongoDbListSuggestionsQuery,
 } from '@/Infrastructure/Persistence/MongoDb/Queries/mod.ts';
 import {
     MongoDbClient,
@@ -39,7 +35,9 @@ export class Persistence implements Module {
         console.log('Persistence module added', serviceCollection, config);
 
         MongoDbServices.add(config, serviceCollection, [
-            MongoDbSuggestionRepository.name,
+            MongoDbMovieRepository.name,
+            MongoDbOrderRepository.name,
+            MongoDbPaymentRepository.name,
         ]);
 
         // Register InMemoryContext as singleton
@@ -59,22 +57,7 @@ export class Persistence implements Module {
                         'InMemoryDomainEventPublisher',
                     )).getOrThrow();
 
-                /*
-                const repository = (await serviceProvider.getService<InMemoryTournamentRepository>(
-                    InMemoryTournamentRepository.name,
-                )).getOrThrow();
-                const tournamentRunRepository =
-                    (await serviceProvider.getService<InMemoryTournamentRunRepository>(
-                        InMemoryTournamentRunRepository.name,
-                    )).getOrThrow();
-
-                    */
-                const repositories = new Map<string, Repository<AggregateRoot<EntityId>, EntityId>>(
-                    [
-                        //[Tournament.name, repository],
-                        //[TournamentRun.name, tournamentRunRepository],
-                    ],
-                );
+                const repositories = new Map<string, Repository<AggregateRoot<EntityId>, EntityId>>([],);
 
                 const unitOfWork = new InMemoryUnitOfWork(repositories);
 
@@ -115,20 +98,10 @@ export class Persistence implements Module {
                         MongoDbPaymentRepository.name,
                     )).getOrThrow();
 
-                // Suggestions
-                const suggestionRepository = (await serviceProvider.getService<
-                    MongoDbSuggestionRepository
-                >(
-                    MongoDbSuggestionRepository.name,
-                )).getOrThrow();
-
                 const unitOfWork = new MongoDbUnitOfWork(mongoClient.session);
                 unitOfWork.registerRepository(movieRepository);
                 unitOfWork.registerRepository(orderRepository);
                 unitOfWork.registerRepository(paymentRepository);
-
-                // Suggestions
-                unitOfWork.registerRepository(suggestionRepository);
 
                 const interceptors = [
                     new PublishDomainEventsMongoDbUnitOfWorkInterceptor(
@@ -177,31 +150,6 @@ export class Persistence implements Module {
                 return new MongoDbPaymentRepository(mongoClient, mapper);
             },
         );
-
-        // Suggestions
-        serviceCollection.addScoped(
-            MongoDbSuggestionRepository.name,
-            async (serviceProvider: ServiceProvider) => {
-                const mongoClient =
-                    (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
-                const mapper = new SuggestionDocumentMapper();
-
-                return new MongoDbSuggestionRepository(mongoClient, mapper);
-            },
-        );
-
-        /*
-        serviceCollection.addScoped(
-            InMemoryTournamentRepository.name,
-            async (serviceProvider: ServiceProvider) => {
-                const context = (await serviceProvider.getService<InMemoryContext>(
-                    InMemoryContext.name,
-                )).getOrThrow();
-
-                return new InMemoryTournamentRepository(context);
-            },
-        );
-        */
     }
 
     private registerQueries(serviceCollection: ServiceCollection): void {
@@ -213,39 +161,6 @@ export class Persistence implements Module {
                 return new MongoDbGetOrderByBookingIdQuery(mongoClient);
             },
         );
-
-        serviceCollection.addScoped(
-            MongoDbListSuggestionsQuery.name,
-            async (serviceProvider: ServiceProvider) => {
-                const mongoClient =
-                    (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
-
-                return new MongoDbListSuggestionsQuery(mongoClient);
-            },
-        );
-
-        serviceCollection.addScoped(
-            MongoDbGetSuggestionByIdQuery.name,
-            async (serviceProvider: ServiceProvider) => {
-                const mongoClient =
-                    (await serviceProvider.getService<MongoDbClient>('MongoDbClient')).getOrThrow();
-
-                return new MongoDbGetSuggestionByIdQuery(mongoClient);
-            },
-        );
-
-        /*
-        serviceCollection.addScoped(
-            InMemoryFindAllTournamentsQuery.name,
-            async (serviceProvider: ServiceProvider) => {
-                const context = (await serviceProvider.getService<InMemoryContext>(
-                    InMemoryContext.name,
-                )).getOrThrow();
-
-                return new InMemoryFindAllTournamentsQuery(context);
-            },
-        );
-        */
     }
 
     use(_serviceProvider: ServiceProvider): Promise<void> {

@@ -1,26 +1,14 @@
 import { ServiceCollection, ServiceProvider } from '@domaincrafters/di';
 
-import {
-    CreateSuggestionUseCase,
-    type CreateSuggestionUseCaseInput,
-    GetSuggestionByIdQueryUseCase,
-    type GetSuggestionByIdQueryUseCaseInput,
-    ListSuggestionsQueryUseCase,
-    WhenSuggestionCreatedConsoleLogSuggestion,
-} from '@/Application/Ticketing/Suggestions/mod.ts';
 import { domainEventPolicies } from '@/Application/mod.ts';
 import type { Logger, UseCase } from '@/Application/Ports/mod.ts';
 import type {
     GetOrderByBookingIdQuery,
-    SuggestionByIdReadModel,
-    SuggestionListItemReadModel,
 } from '@/Application/Ports/Queries/mod.ts';
 import { DomainEventRegistry } from '@/Infrastructure/Events/Shared/mod.ts';
 import { PolicyDomainEventListener } from '@/Infrastructure/Events/mod.ts';
 import {
     MongoDbGetOrderByBookingIdQuery,
-    MongoDbGetSuggestionByIdQuery,
-    MongoDbListSuggestionsQuery,
 } from '@/Infrastructure/Persistence/MongoDb/Queries/mod.ts';
 import { MongoDbUnitOfWork } from '@/Infrastructure/Persistence/MongoDb/Shared/mod.ts';
 import { Config, ConsoleLogger } from '@/Infrastructure/Shared/mod.ts';
@@ -174,69 +162,6 @@ export class Application implements Module {
                 return new CancelOrder(uow, logger);
             },
         );
-
-        // Suggestions
-        serviceCollection.addScoped(
-            CreateSuggestionUseCase.name,
-            async (serviceProvider: ServiceProvider) => {
-                const unitOfWork = (await serviceProvider.getService<MongoDbUnitOfWork>(
-                    MongoDbUnitOfWork.name,
-                )).getOrThrow();
-
-                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name))
-                    .getOrThrow();
-
-                const useCase: UseCase<CreateSuggestionUseCaseInput, string> =
-                    new CreateSuggestionUseCase(
-                        unitOfWork,
-                        logger,
-                    );
-
-                return useCase;
-            },
-        );
-
-        serviceCollection.addScoped(
-            ListSuggestionsQueryUseCase.name,
-            async (serviceProvider: ServiceProvider) => {
-                const query = (await serviceProvider.getService<MongoDbListSuggestionsQuery>(
-                    MongoDbListSuggestionsQuery.name,
-                )).getOrThrow();
-
-                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name))
-                    .getOrThrow();
-
-                const useCase: UseCase<void, SuggestionListItemReadModel[]> =
-                    new ListSuggestionsQueryUseCase(
-                        query,
-                        logger,
-                    );
-
-                return useCase;
-            },
-        );
-
-        serviceCollection.addScoped(
-            GetSuggestionByIdQueryUseCase.name,
-            async (serviceProvider: ServiceProvider) => {
-                const query = (await serviceProvider.getService<MongoDbGetSuggestionByIdQuery>(
-                    MongoDbGetSuggestionByIdQuery.name,
-                )).getOrThrow();
-
-                const logger = (await serviceProvider.getService<Logger>(ConsoleLogger.name))
-                    .getOrThrow();
-
-                const useCase: UseCase<
-                    GetSuggestionByIdQueryUseCaseInput,
-                    SuggestionByIdReadModel
-                > = new GetSuggestionByIdQueryUseCase(
-                    query,
-                    logger,
-                );
-
-                return useCase;
-            },
-        );
     }
 
     private addPolicies(serviceCollection: ServiceCollection): void {
@@ -275,17 +200,6 @@ export class Application implements Module {
                 const policy = new WhenPaymentFailedThenCancelOrder(useCase);
 
                 return policy;
-            },
-        );
-
-        serviceCollection.addScoped(
-            WhenSuggestionCreatedConsoleLogSuggestion.name,
-            async (serviceProvider: ServiceProvider) => {
-                const logger = (await serviceProvider.getService<Logger>(
-                    ConsoleLogger.name,
-                )).getOrThrow();
-
-                return new WhenSuggestionCreatedConsoleLogSuggestion(logger);
             },
         );
     }

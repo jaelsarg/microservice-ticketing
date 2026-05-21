@@ -1,15 +1,9 @@
 import { ServiceProvider } from '@domaincrafters/di';
 
-import {
-    CreateSuggestionUseCase,
-    type CreateSuggestionUseCaseInput,
-} from '@/Application/Ticketing/Suggestions/mod.ts';
 import type { UseCase } from '@/Application/Ports/mod.ts';
 import {
     CreateOrderFromBookingController,
     CreateOrderFromBookingRequest,
-    CreateSuggestionController,
-    type CreateSuggestionRequest,
     SaveMovieController,
 } from '@/Infrastructure/Messaging/LavinMQ/Controllers/mod.ts';
 
@@ -39,8 +33,6 @@ export class AmqpControllerFactory implements ControllerFactory {
         const normalizedOperationId = operationId.toLowerCase();
 
         switch (normalizedOperationId) {
-            case 'whensuggestionsendcreatesuggestion':
-                return this.createCreateSuggestionController();
             case 'whenmovieregisteredsavemovie':
                 return this.createSaveMovieController();
             case 'whenbookingopenedcreateorder':
@@ -50,14 +42,6 @@ export class AmqpControllerFactory implements ControllerFactory {
                     `No controller is defined for operation '${operationId}' and event '${eventName}'`,
                 );
         }
-    }
-
-    private async createCreateSuggestionController(): Promise<AmqpController<unknown>> {
-        const useCase = (await this._serviceProvider.getService<
-            UseCase<CreateSuggestionUseCaseInput, string>
-        >(CreateSuggestionUseCase.name)).getOrThrow();
-
-        return new CreateSuggestionController(useCase) as AmqpController<CreateSuggestionRequest>;
     }
 
     private async createSaveMovieController(): Promise<AmqpController<unknown>> {
