@@ -57,7 +57,7 @@ Deno.test('[Unit] - Ticket - create - valid input; discount - returns aggregate 
     assertEquals(ticket.movieInfo.posterUrl.value, movieInfo.posterUrl.value);
     assertEquals(ticket.movieInfo.ageRating.value, movieInfo.ageRating.value);
     assertEquals(ticket.movieInfo.price.value, movieInfo.price.value);
-    assertEquals(ticket.price.value, movieInfo.price.value * 0.9);
+    assertEquals(ticket.price.value, Number((movieInfo.price.value * 0.9).toFixed(2)));
 });
 
 Deno.test('[Unit] - Ticket - getters - returns correct values', () => {
