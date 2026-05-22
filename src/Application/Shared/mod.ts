@@ -1,4 +1,1 @@
-export {
-    ApplicationException,
-    NotFoundApplicationException,
-} from './ApplicationException.ts';
+export { ApplicationException, NotFoundApplicationException } from './ApplicationException.ts';

@@ -57,7 +57,9 @@ export class Persistence implements Module {
                         'InMemoryDomainEventPublisher',
                     )).getOrThrow();
 
-                const repositories = new Map<string, Repository<AggregateRoot<EntityId>, EntityId>>([],);
+                const repositories = new Map<string, Repository<AggregateRoot<EntityId>, EntityId>>(
+                    [],
+                );
 
                 const unitOfWork = new InMemoryUnitOfWork(repositories);
 

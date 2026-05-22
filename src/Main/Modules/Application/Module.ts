@@ -2,9 +2,7 @@ import { ServiceCollection, ServiceProvider } from '@domaincrafters/di';
 
 import { domainEventPolicies } from '@/Application/mod.ts';
 import type { Logger, UseCase } from '@/Application/Ports/mod.ts';
-import type {
-    GetOrderByBookingIdQuery,
-} from '@/Application/Ports/Queries/mod.ts';
+import type { GetOrderByBookingIdQuery } from '@/Application/Ports/Queries/mod.ts';
 import { DomainEventRegistry } from '@/Infrastructure/Events/Shared/mod.ts';
 import { PolicyDomainEventListener } from '@/Infrastructure/Events/mod.ts';
 import {

@@ -1,9 +1,7 @@
 import { ServiceProvider } from '@domaincrafters/di';
 
 import type { UseCase } from '@/Application/Ports/mod.ts';
-import type {
-    OrderData,
-} from '@/Application/Ports/Queries/mod.ts';
+import type { OrderData } from '@/Application/Ports/Queries/mod.ts';
 import {
     AddCustomerToOrderController,
     GetOrderByBookingIdController,
