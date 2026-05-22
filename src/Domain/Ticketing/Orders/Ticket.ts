@@ -59,7 +59,7 @@ export class Ticket extends Entity<TicketId> {
 
     private static calculatePrice(price: Money, visitorType: VisitorType): Money {
         if (visitorType.equals(VisitorType.create(VisitorTypeState.Discount))) {
-            return Money.create(price.value * this.DISCOUNT_RATE);
+            return Money.create(Number((price.value * this.DISCOUNT_RATE).toFixed(2)));
         }
         return price;
     }
