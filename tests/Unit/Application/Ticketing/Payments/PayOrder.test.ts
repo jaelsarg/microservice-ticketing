@@ -69,7 +69,7 @@ Deno.test('[Unit] - PayOrder - valid input - creates payment', async () => {
                 movie.ageRating,
                 movie.price
             ),
-            Seat.create(2, VisitorType.create(VisitorTypeState.Discounted)),
+            Seat.create(2, VisitorType.create(VisitorTypeState.Discount)),
             'Blue room',
             new Date('2024-07-01T19:00:00Z')
         ),
@@ -212,7 +212,7 @@ Deno.test('[Unit] - PayOrder - non-existent booking - throws OrderWithBookingNot
                 movie.ageRating,
                 movie.price
             ),
-            Seat.create(2, VisitorType.create(VisitorTypeState.Discounted)),
+            Seat.create(2, VisitorType.create(VisitorTypeState.Discount)),
             'Blue room',
             new Date('2024-07-01T19:00:00Z')
         ),

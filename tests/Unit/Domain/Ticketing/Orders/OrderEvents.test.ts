@@ -41,7 +41,7 @@ Deno.test('[Unit] - TicketsReleased event - with customer - exposes data', () =>
             movieId: 'movie-123',
             room: 'Room A',
             seatNumber: 6,
-            visitorType: 'Discounted',
+            visitorType: 'Discount',
             price: 8.0,
             showtime: new Date('2024-07-01T20:00:00Z'),
         }
@@ -77,7 +77,7 @@ Deno.test('[Unit] - TicketsReleased event - without customer - exposes data', ()
             movieId: 'movie-123',
             room: 'Room A',
             seatNumber: 6,
-            visitorType: 'Discounted',
+            visitorType: 'Discount',
             price: 8.0,
             showtime: new Date('2024-07-01T20:00:00Z'),
         }

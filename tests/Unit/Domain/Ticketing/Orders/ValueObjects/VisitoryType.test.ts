@@ -27,7 +27,7 @@ Deno.test('[Unit] - VisitorType - equals - same value - returns true', () => {
 Deno.test('[Unit] - VisitorType - equals - different value - returns false', () => {
     // Arrange
     const left = VisitorType.create(VisitorTypeState.Standard);
-    const right = VisitorType.create(VisitorTypeState.Discounted);
+    const right = VisitorType.create(VisitorTypeState.Discount);
 
     // Act
     const result = left.equals(right);

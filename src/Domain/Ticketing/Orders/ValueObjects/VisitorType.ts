@@ -2,7 +2,7 @@ import { ValueObject } from '@/Domain/Shared/mod.ts';
 
 export enum VisitorTypeState {
     Standard = 'Standard',
-    Discounted = 'Discounted',
+    Discount = 'Discount',
 }
 
 export class VisitorType extends ValueObject {

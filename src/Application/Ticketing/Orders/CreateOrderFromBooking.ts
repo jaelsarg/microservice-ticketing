@@ -21,7 +21,7 @@ export interface CreateOrderFromBookingInput {
     room: string;
     showtime: Date;
     standardVisitors: number;
-    discountedVisitors: number;
+    discountVisitors: number;
     seatNumbers: number[];
 }
 
@@ -56,7 +56,7 @@ export class CreateOrderFromBooking implements UseCase<CreateOrderFromBookingInp
             const movieInfo = this.createMovieInfo(movie);
             const seats = this.createSeats(
                 input.standardVisitors,
-                input.discountedVisitors,
+                input.discountVisitors,
                 input.seatNumbers,
             );
             const tickets = this.createTickets(movieInfo, seats, input.room, input.showtime);
@@ -89,7 +89,7 @@ export class CreateOrderFromBooking implements UseCase<CreateOrderFromBookingInp
 
     private createSeats(
         standardVisitors: number,
-        discountedVisitors: number,
+        discountVisitors: number,
         seatNumbers: number[],
     ): Seat[] {
         const seats: Seat[] = [];
@@ -99,9 +99,9 @@ export class CreateOrderFromBooking implements UseCase<CreateOrderFromBookingInp
             seats.push(Seat.create(seatNumber, VisitorType.create(VisitorTypeState.Standard)));
         }
 
-        for (let i = standardVisitors; i < standardVisitors + discountedVisitors; i++) {
+        for (let i = standardVisitors; i < standardVisitors + discountVisitors; i++) {
             const seatNumber = seatNumbers[i] ?? 0;
-            seats.push(Seat.create(seatNumber, VisitorType.create(VisitorTypeState.Discounted)));
+            seats.push(Seat.create(seatNumber, VisitorType.create(VisitorTypeState.Discount)));
         }
 
         return seats;

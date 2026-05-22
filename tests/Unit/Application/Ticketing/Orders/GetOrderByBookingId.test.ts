@@ -31,7 +31,7 @@ Deno.test('[Unit] - GetOrderByBookingId - valid input - returns order', async ()
             {
                 id: '770e8400-e29b-41d4-a716-446655440200',
                 seatNumber: 2,
-                visitorType: 'Discounted',
+                visitorType: 'Discount',
                 price: 12.50,
                 movieId: '770e8400-e29b-41d4-a716-446655440200',
                 room: 'Blue room',

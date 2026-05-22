@@ -238,7 +238,7 @@ components:
                 - room
                 - showtime
                 - standardVisitors
-                - discountedVisitors
+                - discountVisitors
                 - seatNumbers
             properties:
                 bookingId:
@@ -254,7 +254,7 @@ components:
                     format: date-time
                 standardVisitors:
                     type: integer
-                discountedVisitors:
+                discountVisitors:
                     type: integer
                 seatNumbers:
                     type: array
@@ -348,7 +348,7 @@ components:
                                 type: integer
                             visitorType:
                                 type: string
-                                enum: [standard, discounted]
+                                enum: [standard, discount]
                             price:
                                 type: number
                                 format: float

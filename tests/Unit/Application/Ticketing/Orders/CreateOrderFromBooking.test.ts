@@ -60,7 +60,7 @@ Deno.test('[Unit] - CreateOrderFromBooking - valid input - creates order', async
         room: 'Blue room',
         showtime: new Date('2024-07-01T19:00:00Z'),
         standardVisitors: 2,
-        discountedVisitors: 1,
+        discountVisitors: 1,
         seatNumbers: [1, 2, 3],
     };
 
@@ -94,7 +94,7 @@ Deno.test('[Unit] - CreateOrderFromBooking - non-existent movie - throws error',
         room: 'Blue room',
         showtime: new Date('2024-07-01T19:00:00Z'),
         standardVisitors: 2,
-        discountedVisitors: 1,
+        discountVisitors: 1,
         seatNumbers: [1, 2, 3],
     };
 
@@ -139,7 +139,7 @@ Deno.test('[Unit] - CreateOrderFromBooking - missing seat number - throw Invalid
         room: 'Blue room',
         showtime: new Date('2024-07-01T19:00:00Z'),
         standardVisitors: 2,
-        discountedVisitors: 1,
+        discountVisitors: 1,
         seatNumbers: [],
     };
 

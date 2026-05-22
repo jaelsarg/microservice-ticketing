@@ -9,7 +9,7 @@ export interface CreateOrderFromBookingRequest {
     room: string;
     showtime: string;
     standardVisitors: number;
-    discountedVisitors: number;
+    discountVisitors: number;
     seatNumbers: number[];
 }
 
@@ -36,7 +36,7 @@ export class CreateOrderFromBookingController
         Guard.check(request.room, 'room').againstEmpty();
         Guard.check(request.showtime, 'showtime').againstEmpty();
         Guard.check(request.standardVisitors, 'standardVisitors').againstNegative();
-        Guard.check(request.discountedVisitors, 'discountedVisitors').againstNegative();
+        Guard.check(request.discountVisitors, 'discountVisitors').againstNegative();
         Guard.check(request.seatNumbers, 'seatNumbers').againstEmpty();
     }
 
@@ -47,7 +47,7 @@ export class CreateOrderFromBookingController
             room: request.room,
             showtime: new Date(request.showtime),
             standardVisitors: request.standardVisitors,
-            discountedVisitors: request.discountedVisitors,
+            discountVisitors: request.discountVisitors,
             seatNumbers: request.seatNumbers,
         };
     }

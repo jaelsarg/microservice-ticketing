@@ -68,7 +68,7 @@ Deno.test('[Unit] - ReleaseTickets - valid input - marks order', async () => {
                     movie.ageRating,
                     movie.price
                 ),
-                Seat.create(2, VisitorType.create(VisitorTypeState.Discounted)),
+                Seat.create(2, VisitorType.create(VisitorTypeState.Discount)),
                 'Blue room',
                 new Date('2024-07-01T19:00:00Z')
             ),

@@ -15,7 +15,7 @@ const createTickets = () =>
     ),
     Ticket.create(
         MovieInfo.create(MovieId.create('4442d8e5-f939-4f07-9b14-aa83f49d0d34'), MovieTitle.create('Test Movie 2'), MovieDuration.create(123), [ Genre.create('Action'), Genre.create('Adventure') ], PosterUrl.create('http://posterurl.jpg'), AgeRating.create(12), Money.create(0.15 * 123)),
-        Seat.create(12, VisitorType.create(VisitorTypeState.Discounted)),
+        Seat.create(12, VisitorType.create(VisitorTypeState.Discount)),
         'Blue Room',
         new Date('2026-05-15T19:00:00Z')
     )

@@ -31,7 +31,7 @@ Deno.test('[Unit] - Ticket - create - valid input - returns aggregate with value
     assertEquals(ticket.price.value, movieInfo.price.value);
 });
 
-Deno.test('[Unit] - Ticket - create - valid input; discounted - returns aggregate with value objects', () => {
+Deno.test('[Unit] - Ticket - create - valid input; discount - returns aggregate with value objects', () => {
     // Arrange
     const movieInfo = MovieInfo.create(
         MovieId.create(),
@@ -42,7 +42,7 @@ Deno.test('[Unit] - Ticket - create - valid input; discounted - returns aggregat
         AgeRating.create(12),
         Money.create(0.15 * 123)
     );
-    const seat = Seat.create(12, VisitorType.create(VisitorTypeState.Discounted));
+    const seat = Seat.create(12, VisitorType.create(VisitorTypeState.Discount));
     const room = 'Blue Room';
     const showTime = new Date('2026-05-15T19:00:00Z');
 

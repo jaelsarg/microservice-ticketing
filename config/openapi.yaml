@@ -318,7 +318,7 @@ components:
                                     type: string
                                     enum:
                                         - standard
-                                        - discounted
+                                        - discount
                                     example: standard
                                 price:
                                     type: number
