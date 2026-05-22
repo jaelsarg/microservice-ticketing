@@ -24,7 +24,7 @@ export interface TicketData {
     price: number;
     movieId: string;
     room: string;
-    showTime: Date;
+    showtime: Date;
 }
 
 export interface GetOrderByBookingIdQuery {

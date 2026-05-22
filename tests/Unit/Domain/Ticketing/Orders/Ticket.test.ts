@@ -15,10 +15,10 @@ Deno.test('[Unit] - Ticket - create - valid input - returns aggregate with value
     );
     const seat = Seat.create(12, VisitorType.create(VisitorTypeState.Standard));
     const room = 'Blue Room';
-    const showTime = new Date('2026-05-15T19:00:00Z');
+    const showtime = new Date('2026-05-15T19:00:00Z');
 
     // Act
-    const ticket = Ticket.create(movieInfo, seat, room, showTime);
+    const ticket = Ticket.create(movieInfo, seat, room, showtime);
 
     // Assert
     assertEquals(ticket.movieInfo.movieId instanceof MovieId, true);
@@ -44,10 +44,10 @@ Deno.test('[Unit] - Ticket - create - valid input; discount - returns aggregate 
     );
     const seat = Seat.create(12, VisitorType.create(VisitorTypeState.Discount));
     const room = 'Blue Room';
-    const showTime = new Date('2026-05-15T19:00:00Z');
+    const showtime = new Date('2026-05-15T19:00:00Z');
 
     // Act
-    const ticket = Ticket.create(movieInfo, seat, room, showTime);
+    const ticket = Ticket.create(movieInfo, seat, room, showtime);
 
     // Assert
     assertEquals(ticket.movieInfo.movieId instanceof MovieId, true);
@@ -73,15 +73,15 @@ Deno.test('[Unit] - Ticket - getters - returns correct values', () => {
     );
     const seat = Seat.create(12, VisitorType.create(VisitorTypeState.Standard));
     const room = 'Blue Room';
-    const showTime = new Date('2026-05-15T19:00:00Z');
+    const showtime = new Date('2026-05-15T19:00:00Z');
 
     // Act
-    const ticket = Ticket.create(movieInfo, seat, room, showTime);
+    const ticket = Ticket.create(movieInfo, seat, room, showtime);
 
     // Assert
     assertEquals(ticket.movieInfo, movieInfo);
     assertEquals(ticket.seat, seat);
     assertEquals(ticket.room, room);
-    assertEquals(ticket.showTime, showTime);
+    assertEquals(ticket.showtime, showtime);
     assertEquals(ticket.price.value, movieInfo.price.value);
 });

@@ -39,7 +39,7 @@ type TicketDocument = {
     seat: SeatDocument;
     room: string;
     price: number;
-    showTime: Date;
+    showtime: Date;
 };
 
 type MovieInfoDocument = {
@@ -89,7 +89,7 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
                 seat: seat,
                 room: ticket.room,
                 price: ticket.price.value,
-                showTime: ticket.showTime,
+                showtime: ticket.showtime,
             };
         });
 
@@ -170,7 +170,7 @@ export class OrderDocumentMapper implements DocumentMapper<Order> {
         ticket['_seat'] = this.reconstituteSeat(ticketDoc.seat);
         ticket['_room'] = ticketDoc.room;
         ticket['_price'] = Money.create(ticketDoc.price);
-        ticket['_showTime'] = new Date(ticketDoc.showTime);
+        ticket['_showtime'] = new Date(ticketDoc.showtime);
 
         return ticket;
     }

@@ -14,7 +14,7 @@ interface TicketDocument {
     price: number;
     movieInfo: MovieInfoDocument;
     room: string;
-    showTime: string | Date;
+    showtime: string | Date;
 }
 
 interface SeatDocument {
@@ -68,7 +68,7 @@ export class MongoDbGetOrderByBookingIdQuery implements GetOrderByBookingIdQuery
             price: ticket.price,
             movieId: ticket.movieInfo.id,
             room: ticket.room,
-            showTime: new Date(ticket.showTime),
+            showtime: new Date(ticket.showtime),
         }));
 
         const orderData: OrderData = {

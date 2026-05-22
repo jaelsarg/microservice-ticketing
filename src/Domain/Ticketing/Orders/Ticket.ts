@@ -19,7 +19,7 @@ export class Ticket extends Entity<TicketId> {
     private readonly _seat: Seat;
     private readonly _room: string;
     private readonly _price: Money;
-    private readonly _showTime: Date;
+    private readonly _showtime: Date;
 
     private constructor(
         id: TicketId,
@@ -27,21 +27,21 @@ export class Ticket extends Entity<TicketId> {
         seat: Seat,
         room: string,
         price: Money,
-        showTime: Date,
+        showtime: Date,
     ) {
         super(id);
         this._movieInfo = movieInfo;
         this._seat = seat;
         this._room = room;
         this._price = price;
-        this._showTime = showTime;
+        this._showtime = showtime;
     }
 
     static create(
         movieInfo: MovieInfo,
         seat: Seat,
         room: string,
-        showTime: Date,
+        showtime: Date,
     ): Ticket {
         const price = this.calculatePrice(movieInfo.price, seat.visitorType);
 
@@ -51,7 +51,7 @@ export class Ticket extends Entity<TicketId> {
             seat,
             room,
             price,
-            showTime,
+            showtime,
         );
 
         return ticket;
@@ -80,7 +80,7 @@ export class Ticket extends Entity<TicketId> {
         return this._price;
     }
 
-    get showTime(): Date {
-        return this._showTime;
+    get showtime(): Date {
+        return this._showtime;
     }
 }

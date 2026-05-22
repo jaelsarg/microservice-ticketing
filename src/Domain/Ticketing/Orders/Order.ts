@@ -205,7 +205,7 @@ export class Order extends AggregateRoot<OrderId> {
                 seatNumber: ticket.seat.seatNumber,
                 visitorType: ticket.seat.visitorType.value,
                 price: ticket.price.value,
-                showtime: ticket.showTime,
+                showtime: ticket.showtime,
             };
         });
     }
