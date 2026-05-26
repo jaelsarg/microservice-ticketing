@@ -1,5 +1,5 @@
 import { OrderDomainEvent } from '@/Domain/Ticketing/Orders/mod.ts';
-import { EventFQDN } from '../../../Shared/mod.ts';
+import { EventFQDN } from '@/Domain/Shared/mod.ts';
 
 export interface CustomerDetail {
     salutation: string;
