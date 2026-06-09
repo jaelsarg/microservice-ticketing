@@ -88,9 +88,9 @@ jobs:
       - name: Login to registry ${{ vars.AZ_CONTAINER_REGISTRY }}
         uses: azure/docker-login@v1
         with:
-          login-server:
-            username:
-            password:
+          login-server: ${{ vars.AZ_CONTAINER_REGISTRY }}
+          username: ${{ secrets.HOWESTPRIME_WIDE_CI_SERVICE_PRINCIPAL }}
+          password: ${{ secrets.HOWESTPRIME_WIDE_CI_SERVICE_PRINCIPAL_PASSWORD }}
           
       - name: Build and push Docker image
         id: push
@@ -142,7 +142,7 @@ jobs:
           "WEBAPI_PORT=${{vars.HOWESTPRIME_TICKETING_P_WEBAPI_PORT}}" \
           "WEBAPI_HOST=${{vars.HOWESTPRIME_TICKETING_P_WEBAPI_HOST}}" \
 
-          az conatinerapp ingress enable \
+          az containerapp ingress enable \
           --name ${{ env.AZ_CONTAINER_NAME }} \
           --type external
           --target-port- 8000 
