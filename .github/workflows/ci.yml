@@ -81,6 +81,9 @@ jobs:
       contents: read
       attestations: write
       id-token: write
+    env:
+      AZ_CONTAINER_NAME: howestprime-ticketing-p-webapi
+      CONTAINER_VERSION_TAG: ${{ github.sha }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
