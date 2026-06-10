@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  AZ_CONTAINER_NAME: howestprime-ticketing
+  CONTAINER_VERSION_TAG: ${{ github.sha }}
+
 jobs:
   testing:
     name: Testing
@@ -81,9 +85,6 @@ jobs:
       contents: read
       attestations: write
       id-token: write
-    env:
-      AZ_CONTAINER_NAME: howestprime-ticketing
-      CONTAINER_VERSION_TAG: ${{ github.sha }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -106,8 +107,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    env:
-      AZ_CONTAINER_NAME: howestprime-ticketing
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
