@@ -127,8 +127,8 @@ jobs:
           --user-assigned "${{ vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI }}" \
           \
           --secrets \
-          "db-password=keyvaultref=${{vars.HOWESTPRIME_TICKETING_P_DOCUMENTDB_PASSWORD_URI}},identityref:${{vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI}}" \
-          "mb-password=keyvaultref=${{vars.HOWESTPRIME_WIDE_P_MESSAGEBROKER_PASSWORD_URI}},identityref:${{vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI}}" \
+          "db-password=keyvaultref:${{vars.HOWESTPRIME_TICKETING_P_DOCUMENTDB_PASSWORD_URI}},identityref:${{vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI}}" \
+          "mb-password=keyvaultref:${{vars.HOWESTPRIME_WIDE_P_MESSAGEBROKER_PASSWORD_URI}},identityref:${{vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI}}" \
           \
           --env-vars \
           "PERSISTENCE_MONGO_DB_PROTOCOL=${{vars.HOWESTPRIME_TICKETING_P_DOCUMENTDB_PROTOCOL}}" \
