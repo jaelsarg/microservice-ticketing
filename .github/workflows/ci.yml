@@ -127,7 +127,7 @@ jobs:
           --registry-password ${{ secrets.HOWESTPRIME_WIDE_CI_SERVICE_PRINCIPAL_PASSWORD }} \
           --user-assigned "${{ vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI }}" \
           \
-          secrets \
+          --secrets \
           "db-password=keyvaultref=${{vars.HOWESTPRIME_TICKETING_P_DOCUMENTDB_PASSWORD_URI}},identityref:${{vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI}}" \
           "mb-password=keyvaultref=${{vars.HOWESTPRIME_WIDE_P_MESSAGEBROKER_PASSWORD_URI}},identityref:${{vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI}}" \
           \
