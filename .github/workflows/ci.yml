@@ -150,4 +150,4 @@ jobs:
           --name ${{ env.AZ_CONTAINER_NAME }} \
           --resource-group ${{ vars.AZ_RESOURCE_GROUP }} \
           --type external \
-          --target-port- 8000 
+          --target-port 8000 
