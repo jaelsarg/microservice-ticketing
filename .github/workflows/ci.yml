@@ -125,7 +125,7 @@ jobs:
           --registry-server ${{ vars.AZ_CONTAINER_REGISTRY }} \
           --registry-username ${{ secrets.HOWESTPRIME_WIDE_CI_SERVICE_PRINCIPAL }} \
           --registry-password ${{ secrets.HOWESTPRIME_WIDE_CI_SERVICE_PRINCIPAL_PASSWORD }} \
-          --user-assigned "${{ vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI}}" \
+          --user-assigned "${{ vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI }}" \
           \
           secrets \
           "db-password=keyvaultref=${{vars.HOWESTPRIME_TICKETING_P_DOCUMENTDB_PASSWORD_URI}},identityref:${{vars.HOWESTPRIME_WIDE_MI_KEYVAULTREADER_URI}}" \
