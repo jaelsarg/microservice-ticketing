@@ -120,7 +120,7 @@ jobs:
           --name ${{ env.AZ_CONTAINER_NAME }} \
           --resource-group ${{ vars.AZ_RESOURCE_GROUP }} \
           --environment ${{ vars.AZ_CONTAINER_ENVIRONMENT }} \
-          --image ${{ vars.AZ_CONTAINER_REGISTRY }}/${{ env.AZ_CONTAINER_REGISTRY }}:${{env.CONTAINER_VERSION_TAG}} \
+          --image ${{ vars.AZ_CONTAINER_REGISTRY }}/${{ env.AZ_CONTAINER_NAME }}:${{env.CONTAINER_VERSION_TAG}} \
           --registry-server ${{ vars.AZ_CONTAINER_REGISTRY }} \
           --registry-username ${{ secrets.HOWESTPRIME_WIDE_CI_SERVICE_PRINCIPAL }} \
           --registry-password ${{ secrets.HOWESTPRIME_WIDE_CI_SERVICE_PRINCIPAL_PASSWORD }} \
