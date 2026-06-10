@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  AZ_CONTAINER_NAME: howestprime-ticketing
+  AZ_CONTAINER_NAME: microservice-ticketing
   CONTAINER_VERSION_TAG: ${{ github.sha }}
 
 jobs:
