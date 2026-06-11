@@ -143,7 +143,7 @@ export class MongoDbUnitOfWork implements UnitOfWork {
                 const result = await action();
 
                 // Commit transaction - this may fail with WriteConflict
-                await this._session.commitTransaction();
+                // await this._session.commitTransaction();
 
                 // Only execute post-transaction hooks after successful commit
                 // Interceptors may need access to tracked entities (e.g., for domain events)
