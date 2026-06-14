@@ -17,7 +17,6 @@ jobs:
     permissions:
       contents: read
     
-    # Your QA steps will go here
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -45,7 +44,6 @@ jobs:
     permissions:
       contents: read
     
-    # Your code coverage steps will go here
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
